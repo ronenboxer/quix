@@ -1,0 +1,53 @@
+.mini-grid{
+
+    .dashed-mini-grid{
+
+        &.horizontal-border{
+            &:after{
+                @include horizontal-dash(#333, 3px, 1px, top)
+            }
+            &:before{
+                @include horizontal-dash(#333, 3px, 1px, bottom)
+            }
+
+        }
+
+        &.vertical-border{
+            &:after{
+                @include vertical-dash(#333, 3px, 1px, right)
+            }
+            &:before{
+                @include vertical-dash(#333, 3px, 1px, left)
+            }
+
+        }
+    }
+    
+    &.selected{
+        *{
+            border-color: $blue-10;
+        }
+        .dashed-mini-grid{
+    
+            &.horizontal-border{
+    
+                &:after{
+                    @include horizontal-dash($blue-10, 3px, 1px, top)
+                }
+                &::before{
+                    @include horizontal-dash($blue-10, 3px, 1px, bottom)
+                }
+            }
+    
+            &.vertical-border{
+                &:after{
+                    @include vertical-dash($blue-10, 3px, 1px, right)
+                }
+                &::before{
+                    @include vertical-dash($blue-10, 3px, 1px, left)
+                }
+    
+            }
+        }
+    }
+}

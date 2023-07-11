@@ -1,0 +1,305 @@
+.global-container.page-editor-container {
+    width: 100dvw;
+    max-width: unset !important;
+    background-color: palette('white', '100');
+
+    .page-preview-underlay {
+        overflow: visible;
+        border-inline: 1px dashed palette('black', '200');
+    }
+
+    .buffer-container {
+        background-color: white;
+        overflow: auto;
+
+        .page-link-container {
+            max-width: unset !important;
+            background-color: white;
+            border-bottom: 2px solid palette('white', '200');
+            top: 0;
+            left: 0;
+
+            .page-link {}
+        }
+
+
+        .page-preview {
+            max-width: unset !important;
+            max-height: unset !important;
+            background-color: white;
+            overflow: auto;
+
+            &.selected {
+                border: 1px solid palette('blue', 'A700')
+            }
+
+            .wap-edit-preview.main-container.sections-container {
+                width: 100%;
+                flex-grow: 1;
+                overflow-y: auto;
+                overflow-x: hidden;
+
+
+                .section-preview {
+                    .section-header {
+                        left: 8px;
+                        top: -1.5rem;
+
+                        &.global {
+                            top: 4px
+                        }
+
+                        .global-icon {
+                            margin-top: calc(-rem(4px));
+                        }
+                    }
+                }
+
+
+            }
+
+
+            .sections-overlay {
+                width: 100dvw;
+                height: 100dvh;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+
+            }
+
+            .single-section-overlay-preview {
+                max-width: unset !important;
+                top: 0;
+                left: 0;
+
+                .section-preview-add-section-button-container {
+                    .add-section-button {}
+                }
+
+                .grid-drag-lines-container {
+                    top: 0;
+                    left: 0;
+
+                    .grid-col-drag-lines {
+                        &.selected {
+                            background-color: rgba(76, 131, 230, 32%);
+                        }
+
+                        .col-line {
+                            width: 3px;
+
+                            &:after {
+                                @include vertical-dash(#333, 10px, .5px, right);
+                            }
+
+                            &:hover {
+                                &:after {
+                                    @include vertical-dash(rgb(76, 76, 230), 10px, 1px, right);
+                                }
+
+                            }
+                        }
+                    }
+
+                    .grid-row-drag-lines {
+                        &.selected {
+                            background-color: rgba(76, 76, 230, 39%);
+                        }
+
+                        .row-line {
+                            height: 3px;
+
+                            &:after {
+                                @include horizontal-dash(#333, 10px, .5px);
+                            }
+
+                            &:hover {
+                                &:after {
+                                    @include horizontal-dash(rgb(76, 76, 230), 10px, 1px);
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
+                .grid-canvas-edit {
+
+                    &:after,
+                    &:before {
+                        z-index: 100;
+                    }
+
+                    &:after {
+                        @include horizontal-dash(palette('blue', 'A700'), $dash: 7px, $space: 2px, $position: top)
+                    }
+
+                    &:before {
+                        @include vertical-dash(palette('blue', 'A700'), $dash: 7px, $space: 2px, $position: left)
+                    }
+
+                    &.drag-mode {
+                        &:after {
+                            @include horizontal-dash(palette('grey', '400'), $dash: 7px, $space: 2px, $position: top)
+                        }
+
+                        &:before {
+                            @include vertical-dash(palette('grey', '400'), $dash: 7px, $space: 2px, $position: left)
+                        }
+
+                    }
+
+                    .container-frame {
+
+                        border-style: solid;
+                        border-width: 0;
+                        border-top-width: 8px;
+                        border-left-width: 8px;
+                    }
+
+                    .new-grid-row {
+                        @include horizontal-dash(palette('blue', 'A700'), $dash: 7px, $space: 2px, $position: top);
+                        height: 10px;
+
+                        &:hover {
+                            // cursor: ns-resize;
+                        }
+
+                        &.disabled {
+                            @include horizontal-dash(palette('grey', '400'), $dash: 7px, $space: 2px, $position: top);
+                        }
+                    }
+
+                    .new-grid-col {
+                        @include vertical-dash(palette('blue', 'A700'), $dash: 7px, $space: 2px, $position: left);
+                        width: 10px;
+
+                        &:hover {
+                            // cursor: ew-resize;
+                        }
+
+                        &.disabled {
+
+                            @include vertical-dash(palette('grey', '400'), $dash: 7px, $space: 2px, $position: left);
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
+    .sections-edit-tools-overlay-container {
+        .grid-canvas-resize-toggle {
+            bottom: 48px;
+            left: 50%;
+            translate: -50%;
+            border-radius: 4px;
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+        }
+
+        .grid-headers {
+            background-color: white;
+            border-radius: 4px;
+
+            .grid-select-idx {
+
+                .header-text {
+                    border-radius: 2px;
+                    min-width: unset !important;
+                    min-height: unset !important;
+                }
+
+                &:hover {
+                    .add-grid-button {
+                        display: inline-block;
+                    }
+                }
+            }
+
+            &.grid-cols {
+                height: 1.5rem;
+                grid-template-rows: 100%;
+                left: 0;
+                top: -2rem;
+            }
+
+            &.grid-rows {
+                width: 1.5rem;
+                grid-template-columns: 100%;
+                top: 0;
+                left: -2rem;
+
+            }
+
+            .grid-select-idx {
+                .add-grid-button {
+                    min-width: unset !important;
+                    min-height: unset !important;
+                    width: rem(16px);
+                    height: rem(16px);
+                    border-radius: 50%;
+                    line-height: 1;
+
+                    span {
+                        transform: translate(2px, -1px);
+                    }
+                }
+
+                &.grid-cols-button {
+                    &:not(:last-child) {
+                        border-inline-end: 1px solid palette('white', '200');
+                    }
+
+                    .add-grid-button.first {
+                        left: -2.5px;
+                        top: 50%;
+                    }
+
+                    .add-grid-button.second {
+                        left: calc(2.5px + 100%);
+                        top: 50%;
+                    }
+                }
+
+                &.grid-rows-button {
+                    max-width: unset;
+                    min-width: unset !important;
+
+                    &:not(:last-child) {
+                        border-bottom: 1px solid palette('white', '200');
+                    }
+
+                    .add-grid-button.first {
+                        top: -2.5px;
+                        left: 50%;
+                    }
+
+                    .add-grid-button.second {
+                        top: calc(2.5px + 100%);
+                        left: 50%;
+                    }
+                }
+            }
+        }
+
+        .single-section-overlay-edit-tools {
+
+            .selected-section-edit-toolbar {
+                .grid-select-form {
+                    // padding-inline-end:16px;
+                    // border-inline-end:1px solid #ececec;
+                }
+
+                .custom-grid-modal {
+                    top: -2px;
+                    left: -2px;
+                    border-radius: 8px;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                }
+            }
+        }
+    }
+}

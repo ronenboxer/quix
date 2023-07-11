@@ -1,0 +1,26 @@
+.single-section-overlay-edit-tools {
+    .grid-canvas-instructions-header {
+        left:50%;
+        translate: -50% ;
+        border-radius: 3px;
+    }
+
+    .selected-section-edit-toolbar {
+        border-radius: 5px;
+        background-color: white;
+
+        .auto-grid-template-selection {
+            width: 200px;
+
+        }
+    }
+}
+
+.auto-grid-list-item {
+    .mini-grid {
+        width: rem(24px);
+        height: rem(24px);
+    }
+
+    &.customize-grid-button {}
+}

@@ -1,0 +1,22 @@
+.global-double-menu{
+    min-height: 100%;
+
+    .first-list{
+        min-height: 100%;
+        border-inline-end: 1px solid $white-200;
+    }
+    .second-list{
+        .second-list-header{
+            border-bottom: 1px solid $white-200;
+        }
+    }
+
+    .first-list,
+    .second-list{
+        .list-item{
+
+            &.first-list-item{}
+            &.second-list-item{}
+        }
+    }
+}

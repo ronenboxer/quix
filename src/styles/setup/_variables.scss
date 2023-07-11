@@ -1,0 +1,632 @@
+$positions: absolute, sticky, relative, fixed;
+$displays: inline-block, block, inline, flex, grid;
+$alignments: end, start, center;
+$flex-spacing: between, evenly, around;
+$content-fit: max, min, fit;
+$overflows: hidden, auto, scroll;
+
+// Utilities
+$reference-map: (
+    'x':inline,
+    'y':block,
+    't':top,
+    'b':bottom,
+    's':inline-start,
+    'e':inline-end,
+    'l':left,
+    'r':right,
+);
+
+// LAYOUT
+$layoutPadding: 40px;
+$layoutBeta: 146px;
+$header-height: 60px;
+
+// LAYOUT BREAKPOINTS
+$break-mobile: 580px;
+$break-small: 620px;
+$break-medium: 860px;
+$break-narrow: 580px;
+$break-normal: 1300px;
+$break-wide: 1500px;
+
+$padded-break-narrow: $break-narrow + $layoutPadding * 2;
+$padded-break-normal: $break-normal + $layoutPadding * 2;
+$padded-break-wide: $break-wide + $layoutPadding * 2;
+
+// Sizes
+$edit-panel-width: 40px;
+$edit-tool-sidebar-width: 60px;
+
+// Palette
+$palette-long: 'grey', 'pink', 'red', 'brown', 'deep-orange', 'orange', 'amber', 'yellow' 'lime', 'light-green', 'green', 'teal', 'cyan', 'light-blue', 'blue', 'blue-grey', 'indigo', 'purple', 'deep-purple';
+$long-values: '50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'AA200', 'A400', 'A700';
+$palette-short: 'black';
+$palette-short-name: '$black';
+$short-values: '50', '100', '200', '300', '400', '500', '600', '700';
+
+// Backgrounds
+
+// Borders
+$selected-section-border-color: #6f56f9;
+$hovered-section-border-color: #dad2fe;
+$selected-section-el-border-color: #136cff;
+$highlighted-section-el-border-color: #7fb1ff;
+$hovered-section-el-border-color: #d7e5fe;
+
+$selected-header-border-color: #fd620d;
+$bg: #e8ddd7;
+// .93
+// 0.95);
+$hovered-header-border-color: #fcd2ba;
+$bg: #ffd4d0;
+// , 0.93)
+$selected-footer-border-color: #ff620d;
+$hovered-footer-border-color: #fcd2ba;
+
+$menu-border-color: #dfe5eb;
+
+// Fills
+$hard-black: #17191C;
+$grayish-blue: #415361;
+$text-black: #000624;
+$easy-black :#2d3034;
+$element-blue: #116dff;
+$el-title-hover-color: #3b4057;
+$cloudy-sky: #7a92a5;
+$element-bg-blue: #ebf2ff;
+$button-hover-bg: #f7f8f8;
+$bg-semi-blue: #e7f0ff;
+$bg-selected-blue: #d6e6fe;
+$menu-item-hover-color: #2b5672;
+$hovered-section-el-fill-color: #588bdf;
+
+
+
+// Blacks
+$palette-map: (
+    'black':("50": #4d4d4d,
+        "100": #3c3c3c,
+        "200": #333333,
+        "300": #242424,
+        "400": #1B1B1B,
+        "500": #141414,
+        "600": #000624,
+        "700": #000, ),
+    'grey': ('50': #fafafa,
+        '100': #f5f5f5,
+        '200': #eeeeee,
+        '300': #e0e0e0,
+        '400': #bdbdbd,
+        '500': #9e9e9e,
+        '600': #757575,
+        '700': #616161,
+        '800': #424242,
+        '900': #373737,
+        'A100': #c1c1c1,
+        'A200': #79828d,
+        'A400': #828385,
+        'A700': #808080),
+    'white':('50': #fff,
+        '100': #f9f9f9,
+        '200': #ececec,
+        '300': #e5e5e5,
+        '400': #eff0f2,
+        '500': #ccc,
+        '600': #dbdbdb,
+        '700': #d0d0d0),
+    'pink':('50': #fce4ec,
+        '100': #f8bbd0,
+        '200': #f48fb1,
+        '300': #f06292,
+        '400': #ec407a,
+        '500': #e91e63,
+        '600': #d81b60,
+        '700': #c2185b,
+        '800': #ad1457,
+        '900': #880e4f,
+        'A100': #ff80ab,
+        'A200': #ff4081,
+        'A400': #f50057,
+        'A700': #c51162),
+    'red':('50': #ffebee,
+        '100': #ffcdd2,
+        '200': #ef9a9a,
+        '300': #e57373,
+        '400': #ef5350,
+        '500': #f44336,
+        '600': #e53935,
+        '700': #d32f2f,
+        '800': #c62828,
+        '900': #b71c1c,
+        'A100': #ff8a80,
+        'A200': #ff5252,
+        'A400': #ff1744,
+        'A700': #d50000,
+    ),
+    'brown':('50': #efebe9,
+        '100': #d7ccc8,
+        '200': #bcaaa4,
+        '300': #a1887f,
+        '400': #8d6e63,
+        '500': #795548,
+        '600': #6d4c41,
+        '700': #5d4037,
+        '800': #4e342e,
+        '900': #3e2723,
+        'A100': #ac977a,
+        'A200': #874735,
+        'A400': #642720,
+        'A700': #410f10),
+    'deep-orange':('50': #fbe9e7,
+        '100': #ffccbc,
+        '200': #ffab91,
+        '300': #ff8a65,
+        '400': #ff7043,
+        '500': #ff5722,
+        '600': #f4511e,
+        '700': #e64a19,
+        '800': #d84315,
+        '900': #bf360c,
+        'A100': #ff9e80,
+        'A200': #ed5420,
+        'A400': #d43a1d,
+        'A700': #851717),
+    'orange':('50': #fff3e0,
+        '100': #ffe0b2,
+        '200': #ffcc80,
+        '300': #ffb74d,
+        '400': #ffa726,
+        '500': #ff9800,
+        '600': #fb8c00,
+        '700': #f57c00,
+        '800': #ef6c00,
+        '900': #e65100,
+        'A100': #ffd180,
+        'A200': #ffab40,
+        'A400': #ff9100,
+        'A700': #ff6d00),
+    'amber':('50': #fff8e1,
+        '100': #ffecb3,
+        '200': #ffe082,
+        '300': #ffd54f,
+        '400': #ffca28,
+        '500': #ffc107,
+        '600': #ffb300,
+        '700': #fdab3d,
+        '800': #ffa000,
+        '900': #ff8f00,
+        'A100': #ffe57f,
+        'A200': #ffd740,
+        'A400': #ffc400,
+        'A700': #ffab00),
+    'yellow':('50': #fffde7,
+        '100': #fff9c4,
+        '200': #fff59d,
+        '300': #fff176,
+        '400': #ffee58,
+        '500': #ffeb3b,
+        '600': #fdd835,
+        '700': #fbc02d,
+        '800': #f9a825,
+        '900': #fdab3d,
+        'A100': #ffff8d,
+        'A200': #ffff00,
+        'A400': #ffea00,
+        'A700': #ffd600),
+    'lime':('50': #f9fbe7,
+        '100': #f0f4c3,
+        '200': #e6ee9c,
+        '300': #dce775,
+        '400': #d4e157,
+        '500': #cddc39,
+        '600': #c0ca33,
+        '700': #afb42b,
+        '800': #9e9d24,
+        '900': #827717,
+        'A100': #f4ff81,
+        'A200': #eeff41,
+        'A400': #c6ff00,
+        'A700': #aeea00),
+    'light-green':('50': #f1f8e9,
+        '100': #dcedc8,
+        '200': #c5e1a5,
+        '300': #aed581,
+        '400': #9ccc65,
+        '500': #8bc34a,
+        '600': #7cb342,
+        '700': #689f38,
+        '800': #558b2f,
+        '900': #33691e,
+        'A100': #ccff90,
+        'A200': #b2ff59,
+        'A400': #76ff03,
+        'A700': #64dd17),
+    'green':('50': #e8f5e9,
+        '100': #c8e6c9,
+        '200': #a5d6a7,
+        '300': #a5d6a7,
+        '400': #66bb6a,
+        '500': #4caf50,
+        '600': #43a047,
+        '700': #388e3c,
+        '800': #2e7d32,
+        '900': #1b5e20,
+        'A100': #b9f6ca,
+        'A200': #69f0ae,
+        'A400': #00e676,
+        'A700': #00c853,
+    ),
+    'teal':('50': #e0f2f1,
+        '100': #b2dfdb,
+        '200': #80cbc4,
+        '300': #4db6ac,
+        '400': #26a69a,
+        '500': #009688,
+        '600': #00897b,
+        '700': #00796b,
+        '800': #00695c,
+        '900': #004d40,
+        'A100': #a7ffeb,
+        'A200': #64ffda,
+        'A400': #1de9b6,
+        'A700': #00bfa5,
+    ),
+    'cyan':('50': #e0f7fa,
+        '100': #b2ebf2,
+        '200': #80deea,
+        '300': #4dd0e1,
+        '400': #26c6da,
+        '500': #00bcd4,
+        '600': #00acc1,
+        '700': #0097a7,
+        '800': #00838f,
+        '900': #006064,
+        'A100': #84ffff,
+        'A200': #18ffff,
+        'A400': #00e5ff,
+        'A700': #00b8d4,
+    ),
+    'light-blue':('50': #e1f5fe,
+        '100': #b3e5fc,
+        '200': #81d4fa,
+        '300': #4fc3f7,
+        '400': #29b6f6,
+        '500': #03a9f4,
+        '600': #039be5,
+        '700': #0288d1,
+        '800': #0277bd,
+        '900': #01579b,
+        'A100': #80d8ff,
+        'A200': #40c4ff,
+        'A400': #00b0ff,
+        'A700': #0091ea),
+    'blue':('50': #e3f2fd,
+        '100': #c2daff,
+        '200': #90caf9,
+        '300': #64b5f6,
+        '400': #42a5f5,
+        '500': #2196f3,
+        '600': #1e88e5,
+        '700': #1976d2,
+        '800': #1565c0,
+        '900': #0d47a1,
+        'A100': #82b1ff,
+        'A200': #448aff,
+        'A400': #2979ff,
+        'A700': #136cff),
+    'blue-grey':('50': #eceff1,
+        '100': #cfd8dc,
+        '200': #b0bec5,
+        '300': #90a4ae,
+        '400': #78909c,
+        '500': #607d8b,
+        '600': #546e7a,
+        '700': #455a64,
+        '800': #37474f,
+        '900': #263238,
+        'A100': #cfd8dc,
+        'A200': #b0bec5,
+        'A400': #78909c,
+        'A700': #455a64,
+    ),
+    'indigo':('50': #e8eaf6,
+        '100': #c5cae9,
+        '200': #9fa8da,
+        '300': #7986cb,
+        '400': #5c6bc0,
+        '500': #3f51b5,
+        '600': #3949ab,
+        '700': #303f9f,
+        '800': #283593,
+        '900': #1a237e,
+        'A100': #8c9eff,
+        'A200': #536dfe,
+        'A400': #3d5afe,
+        'A700': #304ffe),
+    'purple':('50': #f3e5f5,
+        '100': #e1bee7,
+        '200': #ce93d8,
+        '300': #ba68c8,
+        '400': #ab47bc,
+        '500': #9c27b0,
+        '600': #8e24aa,
+        '700': #7b1fa2,
+        '800': #6a1b9a,
+        '900': #4a148c,
+        'A100': #ea80fc,
+        'A200': #e040fb,
+        'A400': #d500f9,
+        'A700': #aa00ff,
+    ),
+    'deep-purple':('50': #ede7f6,
+        '100': #d1c4e9,
+        '200': #b39ddb,
+        '300': #9575cd,
+        '400': #7e57c2,
+        '500': #673ab7,
+        '600': #5e35b1,
+        '700': #512da8,
+        '800': #4527a0,
+        '900': #311b92,
+        'A100': #b388ff,
+        'A200': #7c4dff,
+        'A400': #651fff,
+        'A700': #6200ea)
+);
+
+// $black-50: #4d4d4d;
+// $black-100: #3c3c3c;
+// $black-200: #333333;
+// $black-300: #242424;
+// $black-400: #1B1B1B;
+// $black-500: #141414;
+// $black-600: #000624;
+// $black-700: #000;
+
+// $black-10: #000624;
+// $black-11: #000;
+
+// Greys
+
+$winter: #9aadbd;
+$explosive: #c4c4c4;
+$american-gray: #808080;
+$dark-gray: #373737;
+$desert: #a9aba3;
+$clay-gray: #9e9e9e;
+$blue-gray: #989fa7;
+$toned-gray: #8d8c86;
+$ceramic-gray: #c1c1c3;
+$cloudy: #828385;
+$indigo-gray: #79828d;
+$chili-gray: #5d5e61;
+
+// Whites
+$white-50: #fff;
+$white-100: #f9f9f9;
+$white-200: #ececec;
+$white-300: #e5e5e5;
+$white-400: #eff0f2;
+$white-500: #ccc;
+$white-600: #dbdbdb;
+$white-700: #d0d0d0;
+
+// $white-0: #fff;
+// $white-1: #ccc;
+
+// $ultra-white: #ffffff;
+// $subtle-white: #f9f9f9;
+// $concrete-white: #ececec;
+// $whitish: #eff0f2;
+// $ceramic-white: #dbdbdb;
+// $grayish: #d0d0d0;
+
+
+// Pinks
+
+$sophia-pink: #ff158a;
+$dark-pink: #fe5bc4;
+$pink: #d973b0;
+$bordeaux: #9e0938;
+$bit-pink: #a40842;
+$fuchsia: #af104f;
+$dark-pink: #b82462;
+$bubble-gum: #c1396d;
+$grapy: #ca497d;
+$pinky: #d05e8c;
+$pinkish: #d9729c;
+$light-pink: #e087ad;
+$baby-pink: #eb9fc0;
+$light-pink: #f6b7d4;
+
+// Reds
+
+$stuck-red: #e2445c;
+$dark-red: #bb3354;
+$rose: #d50000;
+$strawberry: #ff1744;
+$watermelon: #ff5252;
+$lipstick: #b71c1c;
+$cherry: #c62828;
+$lollipop: #d32f2f;
+$bloody: #e53935;
+$ketchup: #f44336;
+$reddish: #ef5350;
+$nordic: #e57373;
+$body: #ef9494;
+$weak-red: #ffcdd2;
+
+// Browns
+
+$light-brown: #ac977a;
+$coffee: #BD816E;
+$brown: #7f5347;
+$muddy: #553e3d;
+$pecan: #563E3E;
+$merlot: #2f0e10;
+$dark-brown: #410f10;
+$brownish: #541a17;
+$clay: #642720;
+$light-clay: #75362a;
+$caramel: #874735;
+$earth: #4a2b16;
+$tree-trunk: #5a3a28;
+
+// Deep Oranges
+
+$orange: #ff642e;
+$sunset: #ff7575;
+$peach: #ffadad;
+$blood-orange: #851717;
+$am-i-red: #ac241e;
+$orangish: #d43a1d;
+$dark-orange: #ed5420;
+$light-orange: rgb(241, 121, 72);
+$white-skin: rgb(247, 155, 113);
+$albino: rgb(247, 186, 151);
+
+// Oranges
+
+// Ambers
+
+// Yellows
+
+$egg-yolk: #ffcb00;
+$yellowest: #ffd900;
+$yellow: #ffe033;
+$saladish: #cab641;
+$yellow: #fdab3d;
+$mustard: #ebb514;
+$honey: #efc443;
+$daisy: #efe06f;
+$light-yellow: #fff099;
+
+// Limes
+
+// Light Greens
+
+// Greens
+
+// Dirty
+$grass-green: #037f4c;
+$green-haze: #00a359;
+$jade: #03c875;
+$light-green: #9cd326;
+$dark-sea-weed: #143319;
+$sea-weed: #1e4d26;
+$bottle-green: #286632;
+$olive: #32803f;
+$green: #3c9a4c;
+$greenish: #46b358;
+$light-green: #5dbf6e;
+$melon: #77c985;
+$mint: #90d49c;
+$fresh-green: #aadeb3;
+$brownish-green: #3d4525;
+$metallic-green: #66743e;
+$leafy: #8fa257;
+$therapeutic: #aebc84;
+$baby-green: #cdd5b2;
+
+// Teals
+
+$teal: #175A63;
+$aquamarine: #4eccc6;
+$darkest-teal: #2f3b35;
+$money-green: #3f4f46;
+$dirty-green: #4f6258;
+$metallic-green: #5f766a;
+$martini-green: #82a290;
+$sand-green: #829a8d;
+$finish-green: #96aa9f;
+$gray-green: #aabab1;
+$light-gray-green: #becac3;
+
+// Cyans
+
+// Light Blues
+
+// Blues
+$blue-0: #2962ff;
+$blue-10: #2962ff;
+
+$river: #68a1bd;
+$light-blue: #579bfc;
+$dark-blue: #0086c0;
+$navy: #225091;
+$royal: #2B76E5;
+$chili-blue: #66ccff;
+$torquise: #a1e2f7;
+$midnight-sky: #0d245d;
+$space-blue: #071d52;
+$ever-blue: #173c9b;
+$ideal-blue: #1b48ba;
+$power-blue: #2054d9;
+$vital-blue: #3b6ae1;
+$neutral-blue: #5a82e6;
+$deep-sea-blue: #0c425f;
+$blueish: #10587e;
+$light-blueish: #146e9e;
+$moist-blue: #1884be;
+$summer-blue: #1c9bdd;
+$sky: #37a9e5;
+$optimistic-blue: #57b7e9;
+$baby-blue: #96d2f1;
+
+// Blue Greys
+
+// Indigos
+
+// Purples
+
+// Deep Purples
+$berry: #7e3b8a;
+$lavander: #bda8f9;
+$purple: #a25ddc;
+$dark-purple: #794bd1;
+$indigo: #5559df;
+$dark-indigo: #401694;
+$steel: #a9bee8;
+$bubble: #faa1f1;
+$dark-eggplant: #612d4c;
+$light-eggplant: #79395f;
+$grape: #914472;
+$plum: #aa4f85;
+$light-plum: #b76696;
+$pinky-purple: #c27ea7;
+$dark-space-purple: #503d75;
+$space-purple: #7055a4;
+$light-space-purple: #836bb1;
+$ivvone-purple: #9783be;
+$foggy-purple: #aa9aca;
+$dark-violet: #2b1a50;
+$violet: #39236b;
+$light-violet: #482b86;
+$hard-purple: #5634a1;
+$medium-purple: #653dbc;
+$soft-purple: #7955c7;
+$petunia: #8e70d0;
+$caprice-purple: #471f6e;
+$light-aubergine: #59278a;
+$dark-fizzy-purple: #6b2fa6;
+$light-fizzy-purple: #7c37c2;
+$dark-lilac: #8e50cc;
+$lilac: #a06cd4;
+$light-lilac: #b288dc;
+
+// Burduexes
+$sauvignon: #501a2e;
+$sira: #6b223d;
+$rose-vino: #862b4c;
+$cherry-blossom: #a1345c;
+$jello: #bc3d6b;
+$red-onion: #c8557f;
+$paprika: #d07093;
+$dark-maple: #791516;
+$light-maple: #971a1b;
+$mahogany: #b62021;
+$tomato: #d42526;
+$saucy-red: #dd4041;
+$dark-reddish: #e25e5f;
+$light-reddish: #e87c7d;

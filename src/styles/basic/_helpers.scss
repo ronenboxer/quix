@@ -1,0 +1,150 @@
+// Flex
+.flex.column {
+	flex-direction: column;
+}
+
+.flex.inline-flex {
+	display: inline-flex;
+}
+
+.align-self-center {
+	align-self: center;
+}
+
+.self-end {
+	align-self: flex-end;
+}
+
+@include flex;
+@include spacing;
+
+.grid-full-width {
+	grid-column: 1/-1;
+}
+
+.grid-full-height {
+	grid-row: 1/-1;
+}
+
+.grid-full {
+	grid-column: 1/-1;
+	grid-row: 1/-1;
+}
+
+
+// List
+.clean-list {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+// Text
+.vertical-text {
+	writing-mode: tb-rl;
+	transform: rotate(-180deg);
+}
+
+.tag-text {
+	// color: $clr1;
+	text-transform: uppercase;
+	@include type(boldCondensed);
+}
+
+@include font-weight-x;
+@include font-size-px;
+@include font-size-rem;
+
+.text-center {
+	text-align: center;
+}
+
+.capitalize {
+	text-transform: capitalize
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+// Aspect ratios
+
+.ratio-16-9 {
+	@include aspect-ratio(100, 56);
+}
+
+.ratio-square {
+	@include aspect-ratio(100, 100);
+}
+
+.ratio-card {
+	@include aspect-ratio(100, 80);
+}
+
+.ratio-poster {
+	@include aspect-ratio(100, 150);
+}
+
+
+// Inline/Block
+
+@include displays;
+
+.hide {
+	display: none;
+}
+
+// Position 
+@include positions;
+
+
+.translate-center {
+	transform: translate((-50%, -50%))
+}
+
+@include z-index;
+
+// Palette
+@include palette;
+
+@include size;
+@include transform;
+
+
+.xs-shadow {
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.s-shadow {
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.arrow {
+	cursor: unset;
+}
+
+.cursor-col-resize {
+	cursor: col-resize;
+}
+
+.cursor-row-resize {
+	cursor: row-resize;
+}
+
+.events-none {
+	pointer-events: none;
+}
+
+.events-all {
+	pointer-events: all;
+}
+
+
