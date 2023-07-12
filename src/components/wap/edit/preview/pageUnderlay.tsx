@@ -27,14 +27,14 @@ export default function PageUnderlay(props: PageUnderlayProps) {
 
     return (
         <Box
-            className="page-preview-underlay absolute grid fg-1 white-400 pa-0 mb-0 z-1 grey-200 background"
+            className="page-preview-underlay absolute grid fg-1 z-1 pa-0 mb-0 grey-200 background"
             sx={{
                 width: currBreakpoint.end
                     ? currBreakpoint.end + 'px'
                     : '100%',
                 maxWidth: `calc(100dvw - ${deadSpaceInline}px) !important`,
                 height: `calc(100dvh - ${deadSpaceTop}px)`,
-                gridTemplateColumns: indicatorWidth + ` 1fr`
+                gridTemplateColumns: indicatorWidth + ` 1fr`,
             }}
         >
 

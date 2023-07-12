@@ -264,7 +264,7 @@
 @mixin displays {
   @each $display in $displays {
     .#{$display} {
-      display: $display;
+      display: $display !important;
     }
   }
 }

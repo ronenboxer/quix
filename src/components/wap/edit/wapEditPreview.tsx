@@ -545,7 +545,7 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
                 deadSpaceTop={2 * marginBlock + wapEditToolbarHeight + appBarHeight}
             />
             <Box
-                className="buffer-container w-100 h-100 xs-shadow flex column z-2"
+                className="buffer-container w-100 h-100 xs-shadow flex column"
                 onScroll={scrollHandler}
                 sx={{
                     maxWidth: currScreenWidth
@@ -553,7 +553,7 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
                         : '100%',
                 }}>
                 <Box
-                    className="page-link-container pa-0 ma-0 flex column justify-center items-center sticky blackish"
+                    className="page-link-container relative z-5 pa-0 ma-0 flex column justify-center items-center sticky blackish"
                     sx={{
                         height: pageLinkHeight + 'px',
                     }}>
@@ -563,27 +563,23 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
 
                 </Box>
                 <Box
-                    className={`page-preview pa-0 ma-0 flex column ${selectedEl?.id === currPage.id && 'selected'}`}
+                    className={`page-preview z-4 -0 ma-0 flex column ${selectedEl?.id === currPage.id && 'selected'}`}
                     sx={{
                         width: currScreenWidth
-                            ? currScreenWidth*1.6 + 'px'
+                            ? currScreenWidth + 'px'
                             : '100%',
                         height: `calc(100dvh - ${wapEditToolbarHeight + appBarHeight + 2 * marginBlock + pageLinkHeight}px)`,
                     }}
                 >
                     <main
                         onScroll={scrollHandler}
-                        className="main-container sections-container wap-edit-preview relative h-100"
+                        className="main-container sections-container wap-edit-preview relative grid"
                         style={{
-                            maxWidth: currScreenWidth + 'px !important'
-                        }}
-                        ref={wapEditPreviewRef}>
-                        <section className="scale-container absolute grid h-100 w-100" style={{
                             gridTemplateColumns: currPage.cols.join(' '),
                             gridTemplateRows: currPage.rows(currBreakpoint.start).join(' ')
-                        }}>
-                            {getSections()}
-                        </section>
+                        }}
+                        ref={wapEditPreviewRef}>
+                        {getSections()}
                     </main>
                     {wapEditPreviewRef.current && <SectionsPreviewOverlays
                         viewMode={viewMode}
@@ -596,21 +592,21 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
 
                 </Box>
             </Box>
-            {wapEditPreviewRef.current && <SectionEditToolsOverlays
-                viewMode={viewMode}
-                onSetViewMode={viewModeHandler}
-                currBreakpoint={currBreakpoint}
-                innerTopDelta={-(appBarHeight + wapEditToolbarHeight + 2)}
-                selectedEl={selectedEl}
-                onSelectGridIdx={selectGridIdxHandler}
-                pageRefMap={pageRefMap}
-                currPage={currPage}
-                containerSize={globalContainerSize}
-                onSetGridLayout={sectionGridLayoutHandler}
-                relativeMousePos={lastMouseClickPos}
-                editedGrid={editedGrid}
-                dragMode={dragMode}
-            />}
+                {wapEditPreviewRef.current && <SectionEditToolsOverlays
+                    viewMode={viewMode}
+                    onSetViewMode={viewModeHandler}
+                    currBreakpoint={currBreakpoint}
+                    innerTopDelta={-(appBarHeight + wapEditToolbarHeight + 2)}
+                    selectedEl={selectedEl}
+                    onSelectGridIdx={selectGridIdxHandler}
+                    pageRefMap={pageRefMap}
+                    currPage={currPage}
+                    containerSize={globalContainerSize}
+                    onSetGridLayout={sectionGridLayoutHandler}
+                    relativeMousePos={lastMouseClickPos}
+                    editedGrid={editedGrid}
+                    dragMode={dragMode}
+                />}
 
         </Container>
     )
