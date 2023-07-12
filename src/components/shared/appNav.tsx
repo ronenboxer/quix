@@ -159,6 +159,7 @@ export default function AppNav() {
                                                 color: 'action.hover'
                                             }
                                         }}
+                                        onClick={()=>router.push('wap/id/edit')}
                                     >
                                         {item.title}
                                     </Button>
