@@ -413,21 +413,30 @@
 }
 
 @mixin size {
-  .scale {
-    @for $i from 1 through 200 {
-      &-#{$i} {
-        transform: scale(calc($i / 100));
-      }
-    }
-  }
 
   @for $i from 0 through 100 {
     .w-#{$i} {
       width: $i*1%;
     }
 
+    .max-w-#{$i} {
+      max-width: $i*1%;
+    }
+
+    .min-w-#{$i} {
+      min-width: $i*1%;
+    }
+
     .h-#{$i} {
       height: $i*1%;
+    }
+
+    .max-h-#{$i} {
+      max-height: $i*1%;
+    }
+
+    .min-h-#{$i} {
+      min-height: $i*1%;
     }
   }
 
@@ -438,6 +447,34 @@
 
     .h-#{$fit} {
       height: $fit+(-content)
+    }
+  }
+
+  .max-w {
+    &-unset {
+      max-width: unset !important;
+    }
+
+    &-max {
+      max-width: max-content !important;
+    }
+
+    &-min {
+      max-width: min-content !important;
+    }
+  }
+
+  .max-h {
+    &-unset {
+      max-height: unset !important;
+    }
+
+    &-max {
+      max-height: max-content !important;
+    }
+
+    &-min {
+      max-height: min-content !important;
     }
   }
 
@@ -460,10 +497,12 @@
   @for $i from 0 through 360 {
     .rotate-#{$i} {
       rotate: (calc($i * .01turn));
-      &-deg{
+
+      &-deg {
         rotate: $i*1deg
       }
     }
+
     .scale-#{$i} {
       scale: calc($i / 100);
     }

@@ -89,7 +89,7 @@ export default function AppNav() {
                     color: 'text.primary',
                     boxShadow: 'none'
                 }}>
-                    <Container maxWidth="xl">
+                    <Container className="max-w-unset mx-0">
                         <Toolbar disableGutters >
                             <Typography
                                 variant="h5"

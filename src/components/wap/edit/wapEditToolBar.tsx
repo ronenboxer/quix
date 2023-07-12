@@ -111,7 +111,7 @@ export default function WapEditToolBar(props: WapEditToolbarProps) {
         <ThemeProvider theme={theme}>
 
             <AppBar position="static"
-                className="wap-edit-toolbar"
+                className="wap-edit-toolbar justify-start"
                 sx={{
                     color: 'text.primary',
                     textDecoration: 'none',
@@ -119,7 +119,7 @@ export default function WapEditToolBar(props: WapEditToolbarProps) {
                     boxShadow: 'none',
                 }}
             >
-                <Container>
+                <Container className="mx-0">
                     <Toolbar disableGutters className="tools">
                         <WapEditTools />
                         <LangListMenu
