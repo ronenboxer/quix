@@ -273,26 +273,26 @@
   @for $i from 0 through 40 {
     .p {
       &a-#{$i} {
-        padding: rem(calc((1px) * $i));
+        padding: rem(calc((1px) * $i)) !important;
       }
 
       @each $ref,
       $val in $reference-map {
         &#{$ref}-#{$i} {
-          padding-#{$val}: rem(calc((1px) * $i));
+          padding-#{$val}: rem(calc((1px) * $i)) !important;
         }
       }
     }
 
     .m {
       &a-#{$i} {
-        margin: rem(calc((1px) * $i));
+        margin: rem(calc((1px) * $i)) !important;
       }
 
       @each $ref,
       $val in $reference-map {
         &#{$ref}-#{$i} {
-          margin-#{$val}: rem(calc((1px) * $i));
+          margin-#{$val}: rem(calc((1px) * $i)) !important;
         }
       }
 
@@ -307,13 +307,13 @@
 
   .p {
     &a-auto {
-      padding: auto;
+      padding: auto !important;
     }
 
     @each $ref,
     $val in $reference-map {
       &#{$ref}-auto {
-        padding-#{$val}: auto;
+        padding-#{$val}: auto !important;
       }
     }
 
@@ -321,13 +321,13 @@
 
   .m {
     &a-auto {
-      margin: auto;
+      margin: auto !important;
     }
 
     @each $ref,
     $val in $reference-map {
       &#{$ref}-auto {
-        margin-#{$val}: auto;
+        margin-#{$val}: auto !important;
       }
     }
   }
@@ -336,7 +336,7 @@
 @mixin font-weight-x {
   @for $i from 1 through 7 {
     .fw-#{$i}00 {
-      font-weight: calc(100 * $i);
+      font-weight: calc(100 * $i) !important;
     }
   }
 }
@@ -344,7 +344,7 @@
 @mixin font-size-px {
   @for $i from 4 through 48 {
     .fs-#{$i}-px {
-      font-size: rem(calc(1px * $i));
+      font-size: rem(calc(1px * $i)) !important;
     }
   }
 }
@@ -352,13 +352,13 @@
 @mixin font-size-rem {
   @for $i from 1 through 100 {
     .fs-0#{$i}-rem {
-      font-size: calc(1rem * $i / 100);
+      font-size: calc(1rem * $i / 100) !important;
     }
   }
 
   @for $i from 100 through 300 {
     .fs-#{$i}-rem {
-      font-size: calc(1rem * $i / 100);
+      font-size: calc(1rem * $i / 100) !important;
     }
   }
 }
@@ -463,6 +463,9 @@
       &-deg{
         rotate: $i*1deg
       }
+    }
+    .scale-#{$i} {
+      scale: calc($i / 100);
     }
   }
 }

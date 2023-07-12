@@ -34,7 +34,7 @@
 
 // List
 .clean-list {
-	list-style-type: none;
+	list-style-type: none !important;
 	padding: 0;
 	margin: 0;
 }
@@ -60,15 +60,15 @@
 }
 
 .capitalize {
-	text-transform: capitalize
+	text-transform: capitalize !important;
 }
 
 .uppercase {
-	text-transform: uppercase;
+	text-transform: uppercase !important;
 }
 
 .lowercase {
-	text-transform: lowercase;
+	text-transform: lowercase !important;
 }
 
 // Aspect ratios
@@ -140,11 +140,11 @@
 }
 
 .events-none {
-	pointer-events: none;
+	pointer-events: none !important;
 }
 
 .events-all {
-	pointer-events: all;
+	pointer-events: all !important;
 }
 
 
