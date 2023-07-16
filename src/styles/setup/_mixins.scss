@@ -250,7 +250,7 @@
 @mixin positions {
   @each $position in $positions {
     .#{$position} {
-      position: $position;
+      position: $position !important;
 
       &.center:not(.flex) {
         left: 50%;
@@ -521,11 +521,11 @@
           color: $shade-val;
         }
 
-        &.fill {
+        &-fill {
           fill: $shade-val;
         }
 
-        &.background {
+        &-background {
           background-color: $shade-val;
         }
 

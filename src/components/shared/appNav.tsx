@@ -95,7 +95,7 @@ export default function AppNav() {
                                 variant="h5"
                                 noWrap
                                 component="a"
-                                href=""
+                                href="/"
                                 sx={{
                                     marginInlineEnd: 2,
                                     paddingBlock: 'auto',

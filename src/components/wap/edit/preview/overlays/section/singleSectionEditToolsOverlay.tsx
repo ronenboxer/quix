@@ -1,8 +1,8 @@
-import { WapSection, SectionType, GridLayout, WapContainerEl, WapElement, HtmlTags, PageType, WapPage } from "@/model/wap"
+import { WapSection, SectionType, GridLayout, WapContainerEl, WapElement, HtmlTags, PageType, WapPage, HtmlContainerTags } from "@/model/wap"
 import { Box } from "@mui/material"
 import { CSSProperties, useEffect, useMemo, useState } from "react"
 import SelectedSectionToolbar from "./selectedSectionToolbar"
-import GridHeaders from "./selectedSectionToolbar/gridHeaders"
+import GridHeaders from "../containers/grid/gridHeaders"
 import { DragMode, Orientation, RefMap, ViewMode } from "@/model/DOM"
 import { WapGridCellSize } from "@/model/wap/misc"
 
@@ -12,9 +12,10 @@ interface SingleSectionEditToolsOverlayProps {
     onSetViewMode: (mode: null | ViewMode) => void
     selectedEl: WapElement<HtmlTags> | WapPage<PageType> | null
     onSelectGridIdx: (idx: number, orientation: Orientation) => void
+    onAddGridColOrRow: <T extends WapContainerEl<HtmlContainerTags>>(props: { container:T, bp: number, orientation: Orientation, idx: number }) => void
     sectionRef: RefMap
     innerTopDelta: number
-    onSetGridLayout: (section: WapContainerEl | WapSection<SectionType>, grid: GridLayout) => void
+    onSetGridLayout: (section: WapSection<SectionType>, grid: GridLayout) => void
     relativeMousePos: { x: number, y: number }
     idx: number
     rows: number
@@ -25,7 +26,7 @@ interface SingleSectionEditToolsOverlayProps {
 }
 
 export default function SingleSectionEditToolsOverlay(props: SingleSectionEditToolsOverlayProps) {
-    const { section, viewMode, onSetViewMode, selectedEl, onSelectGridIdx, sectionRef, innerTopDelta, onSetGridLayout, relativeMousePos, idx, rows, cols, bp, dragMode, editedGrid } = props
+    const { section, viewMode, onSetViewMode, selectedEl, onSelectGridIdx, onAddGridColOrRow, sectionRef, innerTopDelta, onSetGridLayout, relativeMousePos, idx, rows, cols, bp, dragMode, editedGrid } = props
     const [isGridMode, setIsGridMode] = useState(section.gridColsLayout(bp).length > 1 ||
         section.gridRowsLayout(bp).length > 1)
     const gridMode = useMemo(() => {
@@ -43,8 +44,8 @@ export default function SingleSectionEditToolsOverlay(props: SingleSectionEditTo
         // }
         // else setIsGridMode(false)
     }
-
     function selectGridIdxHandler(idx: number, orientation: 'cols' | 'rows') { onSelectGridIdx(idx, orientation) }
+    function addGridColOrRowHandler<T extends WapContainerEl<HtmlContainerTags>>(props: { container: T, bp: number, orientation: Orientation, idx: number }){onAddGridColOrRow(props)}
 
     function getStyle(): CSSProperties {
         const { top, left, height, width } = sectionRef!.ref!.getBoundingClientRect()
@@ -70,7 +71,7 @@ export default function SingleSectionEditToolsOverlay(props: SingleSectionEditTo
                 maxWidth: 'unset !important',
                 ...getStyle()
             }}>
-            {isInstructionsHeaderShown && <header className="absolute grid-canvas-instructions-header fw-200 fs-10-px py-8 px-12 mt-12 text-center w-max events-none blue-A700 background">
+            {isInstructionsHeaderShown && <header className="absolute grid-canvas-instructions-header fw-200 fs-10-px py-8 px-12 mt-12 text-center w-max events-none blue-A700-background">
                 Drag from the left or upper edges to add new grid lines.
             </header>}
             {selectedEl?.id === section.id && viewMode !== 'grid-canvas-edit' && <SelectedSectionToolbar
@@ -93,9 +94,10 @@ export default function SingleSectionEditToolsOverlay(props: SingleSectionEditTo
                 <GridHeaders
                     viewMode={viewMode}
                     bp={bp}
-                    section={section}
+                    container={section}
                     sectionRef={sectionRef}
                     onSelectGridIdx={selectGridIdxHandler}
+                    onAddGridColOrRow={addGridColOrRowHandler}
                     editedGrid={editedGrid}
                     dragMode={dragMode}
                 />}

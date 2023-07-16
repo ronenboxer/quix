@@ -1,9 +1,10 @@
 import DropdownMenu from "@/components/ui/dropdownMenu"
 import { FLAG_LANG_MAP, Flag } from "@/model/DOM"
-import { Capitalize } from "@/services/util.service"
+import { capitalize } from "@/services/util.service"
 import { Box, ListItemIcon, ListItemText, MenuItem, Theme } from "@mui/material"
 import Image from "next/image"
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import VerticalDivider from "@/components/shared/verticalDivider"
 
 interface LangListMenuProps {
     flags: Flag[]
@@ -46,7 +47,7 @@ export default function LangListMenu(props: LangListMenuProps) {
                     <Image src={`/assets/flags/${flag}.png`} alt={FLAG_LANG_MAP[flag].key} width={20} height={15} />
                 </ListItemIcon>
                 <ListItemText>
-                    <p>{Capitalize(FLAG_LANG_MAP[flag].value)}</p>
+                    <p>{capitalize(FLAG_LANG_MAP[flag].value)}</p>
                     <small color={theme.palette.text.primary + '!important'}>{flag === currFlag ? 'Main Language' : 'Visible'}</small>
                 </ListItemText>
             </MenuItem>
@@ -64,5 +65,8 @@ export default function LangListMenu(props: LangListMenuProps) {
         >
             {getLangList()}
         </DropdownMenu>
+        <VerticalDivider height={50} colorClassName="white-200" styles={{
+                marginInline: '8px'
+            }}/>
     </Box>)
 }

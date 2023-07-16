@@ -1,29 +1,27 @@
 import { useSvg } from "@/components/shared/useSvg"
 import SideDrawer from "@/components/ui/sideDrawer"
-import { WapElement, HtmlTags, SectionType, WapContainerEl, WapPage, WapSection, PageType } from "@/model/wap"
+import { WapElement, HtmlTags, SectionType, WapContainerEl, WapPage, WapSection, PageType, GridLayout, HtmlContainerTags } from "@/model/wap"
 import { Box, Breadcrumbs, IconButton, Stack } from "@mui/material"
 import SectionInspector from "./inspector/sectionInspector"
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { makeId } from "@/services/util.service"
 
-interface InspectorDrawerProps<T> {
+interface InspectorDrawerProps<T extends WapElement<HtmlTags> | WapPage<PageType>> {
     isOpen: boolean
     onToggleDrawer: (drawer: 'inspector' | null) => void
     selectedEl: T | null
     onSetSelectedEl: (el: WapElement<HtmlTags> | WapPage<PageType> | null) => void
-    breadcrumbs: (WapPage<PageType> | WapContainerEl | WapSection<SectionType> | WapElement<HtmlTags>)[]
+    onSetGridLayout: <K extends WapContainerEl<HtmlContainerTags>>(cont: K, grid: GridLayout) => void
+    breadcrumbs: (WapPage<PageType> | WapContainerEl<HtmlContainerTags> | WapSection<SectionType> | WapElement<HtmlTags>)[]
+    bp: number
 }
 
-export default function InspectorDrawer<T extends WapPage<PageType> | WapSection<SectionType> | WapContainerEl | WapElement<HtmlTags>>(props: InspectorDrawerProps<T>) {
-    const { isOpen, onToggleDrawer: onToggleInspectorDrawer, selectedEl, onSetSelectedEl, breadcrumbs } = props
+export default function InspectorDrawer<T extends WapElement<HtmlTags> | WapPage<PageType>>(props: InspectorDrawerProps<T>) {
+    const { isOpen, onToggleDrawer: onToggleInspectorDrawer, selectedEl, onSetSelectedEl, onSetGridLayout, breadcrumbs, bp } = props
     const width = 260
 
-    function toggleDrawerHandler(state: boolean = !isOpen) {
-        onToggleInspectorDrawer(!state || isOpen
-            ? null
-            : 'inspector')
-    }
     function selectedElHandler(el: WapElement<HtmlTags> | WapPage<PageType> | null) { onSetSelectedEl(el) }
+    function containerGridLayoutHandler<K extends WapContainerEl<HtmlContainerTags>>(cont: K, grid: GridLayout) { onSetGridLayout(cont, grid) }
 
     function getBreadcrumbs() {
         return breadcrumbs.map(el => <span
@@ -36,7 +34,7 @@ export default function InspectorDrawer<T extends WapPage<PageType> | WapSection
     return (
         <SideDrawer
             isOpen={isOpen}
-            onToggleDrawer={toggleDrawerHandler}
+            onToggleDrawer={(_: boolean) => { }}
             width={width + 'px'}
             anchor="right"
             extraStyle={{
@@ -56,7 +54,10 @@ export default function InspectorDrawer<T extends WapPage<PageType> | WapSection
                     </Breadcrumbs>
                 </Stack>
             </Box>
-            {selectedEl?.name === 'Section' && <SectionInspector
+            {selectedEl?.name?.includes('Section') && <SectionInspector
+                element={selectedEl as WapSection<SectionType>}
+                bp={bp}
+                onSetGridLayout={containerGridLayoutHandler}
                 selectedSection={selectedEl as WapSection<SectionType>}
             />}
         </SideDrawer>

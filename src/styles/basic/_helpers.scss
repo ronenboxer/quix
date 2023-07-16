@@ -4,7 +4,7 @@
 }
 
 .flex.inline-flex {
-	display: inline-flex;
+	display: inline-flex !important;
 }
 
 .align-self-center {
@@ -95,7 +95,7 @@
 @include displays;
 
 .hide {
-	display: none;
+	display: none !important;
 }
 
 // Position 

@@ -3,6 +3,7 @@ import { EditTool, ItemList } from "@/model/DOM";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import { Fragment, useState } from "react";
 import AddElementsDrawer from "./toolDrawer/addElementsDrawer";
+import VerticalDivider from "@/components/shared/verticalDivider";
 
 interface WapEditToolsProps {
 
@@ -15,27 +16,27 @@ export default function WapEditTools(props: WapEditToolsProps) {
     const tools: ItemList<EditTool> = [
         {
             name: 'addElements',
-            icon: useSvg('header_add'),
+            icon: useSvg('headerAdd'),
             title: 'Add Elements'
         },
         {
             name: 'layers',
-            icon: useSvg('header_layers'),
+            icon: useSvg('headerLayers'),
             title: 'Layers'
         },
         {
             name: 'globalSections',
-            icon: useSvg('header_globals'),
+            icon: useSvg('headerGlobals'),
             title: 'Global Sections'
         },
         {
             name: 'pages',
-            icon: useSvg('header_pages'),
+            icon: useSvg('headerPages'),
             title: 'Pages'
         },
         {
             name: 'style',
-            icon: useSvg('site_styles'),
+            icon: useSvg('siteStyles'),
             title: 'Site Styles'
         },
     ]
@@ -71,8 +72,11 @@ export default function WapEditTools(props: WapEditToolsProps) {
     }
 
     return (
-        <Box className="edit-tools flex flex-grow-1 items-center h-100">
+        <Box className="edit-tools flex items-center h-100">
             {getTools()}
+            <VerticalDivider height={50} colorClassName="white-200" styles={{
+                marginInline: '8px'
+            }}/>
         </Box>
     )
 }

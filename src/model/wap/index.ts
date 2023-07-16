@@ -1,4 +1,4 @@
-import { HtmlInput, HtmlContainer, HtmlSection, HtmlMedia, HtmlAction, Text, StylesMap, WapPageType, WapSectionType, OperationStatusObject, WapScreenType, WapPageBreakpoint, WapAction, WapActionLogs, WapSizeUnit, WapGridCellSizeFormat, WapGridCellSize, WapGridLayout, WapSizeMap } from "./misc"
+import { HtmlInput, HtmlContainer, HtmlSection, HtmlMedia, HtmlAction, Text, StylesMap, WapPageType, WapSectionType, OperationStatusObject, WapScreenType, WapPageBreakpoint, WapAction, WapActionLogs, WapGridSizeUnit, WapGridCellSizeFormat, WapGridCellSize, WapGridLayout, WapGridSizeMap, WapElSizeUnit, WapElSizeOptions } from "./misc"
 import { Page } from "./page"
 import { Section } from "./section"
 import { Element } from "./element"
@@ -23,8 +23,10 @@ export type SectionType = WapSectionType
 export type PageBreakpoint = WapPageBreakpoint
 
 export interface Styles extends StylesMap { }
-export type SizeUnit = WapSizeUnit
-export type SizeMap = WapSizeMap
+export type GridSizeUnit = WapGridSizeUnit
+export type GridSizeMap = WapGridSizeMap
+export type ElSizeUnit = WapElSizeUnit
+export type ElSizeOptions = WapElSizeOptions
 export interface GridCellSizeFormat extends WapGridCellSizeFormat { }
 export interface GridCellSize extends WapGridCellSize { }
 export interface GridLayout extends WapGridLayout { }
@@ -37,7 +39,7 @@ export class Wap extends WapObject { }
 export class WapPage<T extends PageType> extends Page<T> { }
 export class WapSection<T extends SectionType> extends Section<T> { }
 export class WapElement<T extends HtmlTags> extends Element<T> { }
-export class WapContainerEl extends Container { }
+export class WapContainerEl<T extends HtmlContainerTags> extends Container<T> { }
 export class WapTextEl<T extends TextTags> extends WapText<T> { }
 export class WapImageEl extends WapImage { }
 export class WapVideoEl extends WapVideo { }

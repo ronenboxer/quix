@@ -214,7 +214,7 @@
 
                 &:hover {
                     .add-grid-button {
-                        display: inline-block;
+                        display: flex !important;
                     }
                 }
             }
@@ -244,7 +244,7 @@
                     line-height: 1;
 
                     span {
-                        transform: translate(2px, -1px);
+                        transform: translate(0, -1px);
                     }
                 }
 

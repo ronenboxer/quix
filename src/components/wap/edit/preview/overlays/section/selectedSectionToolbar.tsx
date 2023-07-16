@@ -1,9 +1,9 @@
 import { GridLayout, SectionType, WapContainerEl, WapSection } from "@/model/wap"
 import { Box, IconButton } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import GridSelection from "./selectedSectionToolbar/gridSelection"
+import GridSelection from "../containers/grid/gridSelection"
 import { DOMGridLayout, ViewMode } from "@/model/DOM"
-import CustomGrid from "./selectedSectionToolbar/customGrid"
+import CustomGrid from "../containers/grid/customGrid"
 import { getMultipliers } from "@/services/util.service"
 import { useSvg } from "@/components/shared/useSvg"
 import VerticalDivider from "@/components/shared/verticalDivider"
@@ -134,7 +134,7 @@ export default function SelectedSectionToolbar(props: SelectedSectionToolbarProp
                 onSetCustomGrid={selectGridOptionHandler}
             />}
             <VerticalDivider colorClassName="white-500" height={57} styles={{ marginInline: '4px' }} />
-            <IconButton className="black-10 ma-4" disabled={viewMode === 'grid-canvas-edit'} onClick={viewModeHandler}>{useSvg('grid_canvas_edit')}</IconButton>
+            <IconButton className="black-10 ma-4" disabled={viewMode === 'grid-canvas-edit'} onClick={viewModeHandler}>{useSvg('gridCanvasEdit')}</IconButton>
             <VerticalDivider colorClassName="white-500" height={57} styles={{ marginInline: '4px' }} />
             <IconButton className="black-10 ma-4">{useSvg('comments')}</IconButton>
             <IconButton className="black-10 ma-4">{useSvg('help')}</IconButton>

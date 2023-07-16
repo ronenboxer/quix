@@ -1,4 +1,4 @@
-import { WapSizeUnit } from "../wap/misc"
+import { WapGridSizeUnit } from "../wap/misc"
 
 export type ItemList<T = string> = {
     title: string,
@@ -42,8 +42,8 @@ export interface PageRefMap {
 }
 
 export interface ElementSize {
-    sizeMap: { [K in WapSizeUnit]: number }
-    totalUnits: { [K in WapSizeUnit]: number }
+    sizeMap: { [K in WapGridSizeUnit]: number }
+    totalUnits: { [K in WapGridSizeUnit]: number }
     absoluteSizes: number[]
     cumulativeSizes: number[]
 }

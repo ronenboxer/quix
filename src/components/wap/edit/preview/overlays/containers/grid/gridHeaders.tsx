@@ -1,23 +1,24 @@
 import { DragMode, Orientation, RefMap, ViewMode } from "@/model/DOM"
-import { WapSection, SectionType, WapContainerEl } from "@/model/wap"
+import { WapSection, SectionType, WapContainerEl, HtmlContainerTags } from "@/model/wap"
 import { WapGridCellSize } from "@/model/wap/misc"
-import { extractValueAndUnit } from "@/services/util.service"
-import { Box, Button, Icon, Typography } from "@mui/material"
+import { extractGridValueAndUnit } from "@/services/util.service"
+import { Box, Button, Icon, Tooltip, Typography } from "@mui/material"
 import { blue, grey } from "@mui/material/colors"
 import { useEffect, useMemo, useRef } from "react"
 
-interface GridHeadersProps {
+interface GridHeadersProps<T extends WapContainerEl<HtmlContainerTags>> {
     viewMode: null | ViewMode
-    section: WapSection<SectionType>
+    container: T
     bp: number
     onSelectGridIdx: (idx: number, orientation: Orientation) => void
+    onAddGridColOrRow: <T extends WapContainerEl<HtmlContainerTags>>(props: { container: T, bp: number, orientation: Orientation, idx: number }) => void
     sectionRef: RefMap
     dragMode: null | DragMode
     editedGrid: null | WapGridCellSize[]
 }
 
-export default function GridHeaders(props: GridHeadersProps) {
-    const { viewMode, section, bp, sectionRef, onSelectGridIdx, dragMode, editedGrid } = props
+export default function GridHeaders<T extends WapContainerEl<HtmlContainerTags>>(props: GridHeadersProps<T>) {
+    const { viewMode, container, bp, sectionRef, onSelectGridIdx, onAddGridColOrRow, dragMode, editedGrid } = props
 
     const headersRef = useRef<{
         [T in Orientation]: number[]
@@ -31,7 +32,7 @@ export default function GridHeaders(props: GridHeadersProps) {
             .getFormattedGridTemplate(editedGrid
                 .filter(cell => cell.value))
         return WapContainerEl
-            .getFormattedGridTemplate(section
+            .getFormattedGridTemplate(container
                 .gridColsLayout(bp))
     }, [sectionRef.grid.cols.absoluteSizes, dragMode, editedGrid])
 
@@ -40,26 +41,31 @@ export default function GridHeaders(props: GridHeadersProps) {
             .getFormattedGridTemplate(editedGrid
                 .filter(cell => cell.value))
         return WapContainerEl
-            .getFormattedGridTemplate(section
+            .getFormattedGridTemplate(container
                 .gridRowsLayout(bp))
     }, [sectionRef.grid.rows.absoluteSizes, dragMode, editedGrid])
 
     function getFormattedHeader(header: string) {
         if (!header.includes('minmax')) {
-            const { size, unit } = extractValueAndUnit(header, 1)
+            const { size, unit } = extractGridValueAndUnit(header, 1)
             return size + unit
         }
         const values = header.replace('minmax(', '').replace(')', '').split(',')
         const formattedValues = [
-            extractValueAndUnit(values[0], 0),
-            extractValueAndUnit(values[1], 0)
+            extractGridValueAndUnit(values[0], 0),
+            extractGridValueAndUnit(values[1], 0)
         ]
         return `minmax(${formattedValues[0].size + formattedValues[0].unit}, ${formattedValues[1].size + formattedValues[1].unit})`
     }
 
     function addGridItemHandler(ev: React.MouseEvent, orientation: 'cols' | 'rows', idx: number) {
         ev.stopPropagation()
-        console.log(orientation, idx)
+        onAddGridColOrRow({
+            bp,
+            orientation,
+            idx,
+            container: container
+        })
     }
 
     function selectGridIdxHandler(ev: React.MouseEvent, idx: number, orientation: 'cols' | 'rows') {
@@ -69,19 +75,23 @@ export default function GridHeaders(props: GridHeadersProps) {
     }
 
     function getAddGridButton(orientation: 'cols' | 'rows', isFirst: boolean, gridIdx: number) {
-        return <Button
-            className={`add-grid-button ${isFirst ? 'first' : "second"} absolute z-31 translate-center hide flex center pa-0 ma-0`}
-            onClick={ev => addGridItemHandler(ev, orientation, isFirst ? gridIdx : gridIdx + 1)}
-            sx={{
-                backgroundColor: blue[100],
-                '&:hover': {
-                    backgroundColor: blue[100]
-                }
-            }}>
-            <Icon className="flex center pa-0 ma-0 fs-080-rem fw-200">
-                +
-            </Icon>
-        </Button>
+        return (
+            <Tooltip title={orientation === 'cols' ? 'Add Column' : 'Add Row'} placement={orientation === 'cols' ? 'top' : 'left'} arrow>
+                <Button
+                    className={`add-grid-button ${isFirst ? 'first' : "second"} absolute z-31 translate-center hide justify-center items-center pa-0 ma-0`}
+                    onClick={ev => addGridItemHandler(ev, orientation, isFirst ? gridIdx : gridIdx + 1)}
+                    sx={{
+                        backgroundColor: blue[100],
+                        '&:hover': {
+                            backgroundColor: blue[100]
+                        }
+                    }}>
+                    <Icon className="flex center pa-0 ma-0 fs-080-rem fw-200">
+                        +
+                    </Icon>
+                </Button>
+            </Tooltip>
+        )
     }
 
     function getGridTemplates(orientation: Orientation = 'cols') {
@@ -95,10 +105,10 @@ export default function GridHeaders(props: GridHeadersProps) {
                     minHeight: 0
                 }}
                 onClick={ev => selectGridIdxHandler(ev, idx, orientation)}
-                ref={(ref: HTMLElement) => {
-                    if (!ref) return
-                    headersRef.current[orientation][idx] = ref[isCol ? 'offsetWidth' : 'offsetHeight']
-                }}
+            // ref={(ref: HTMLElement) => {
+            //     if (!ref) return
+            //     headersRef.current[orientation][idx] = ref[isCol ? 'offsetWidth' : 'offsetHeight']
+            // }}
             >
                 <Box className={`header-text relative w-100 h-100 flex center`}
                     sx={{
@@ -121,7 +131,7 @@ export default function GridHeaders(props: GridHeadersProps) {
     }
 
     useEffect(() => {
-    }, [sectionRef.grid.rows.absoluteSizes, sectionRef.grid.cols.absoluteSizes, section.grid(bp).cols, section.grid(bp).rows])
+    }, [sectionRef.grid.rows.absoluteSizes, sectionRef.grid.cols.absoluteSizes, container.grid(bp).cols, container.grid(bp).rows])
 
     return (
         <>

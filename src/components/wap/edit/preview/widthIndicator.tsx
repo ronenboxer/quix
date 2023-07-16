@@ -1,6 +1,6 @@
 import { SVG, useSvg } from "@/components/shared/useSvg"
 import { PageBreakpoint } from "@/model/wap"
-import { Icon, Typography } from "@mui/material"
+import { Icon, Typography, capitalize } from "@mui/material"
 import { useEffect, useRef } from "react"
 
 interface WidthIndicatorProps {
@@ -27,7 +27,7 @@ export default function WidthIndicator(props: WidthIndicatorProps) {
             <Icon sx={{
                 transform: `scale(${18 / 24})`,
                 fill: '#666'
-            }}>{useSvg('header_' + currBreakpoint.screenType as SVG)}</Icon>
+            }}>{useSvg('header' + capitalize(currBreakpoint.screenType) as SVG)}</Icon>
             <Typography sx={{
                 textTransform: 'capitalize',
                 fontWeight: 400,

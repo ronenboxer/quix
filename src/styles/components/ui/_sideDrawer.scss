@@ -1,0 +1,79 @@
+.global-drawer {
+
+    &.add-elements-drawer {
+
+        .drawer-list {
+            border-inline-end: 1px solid palette('white', '200');
+        }
+
+        .quick-add {
+            .quick-add-header {
+                border-bottom: 1px solid palette('white', '200');
+
+            }
+
+            .add-button {
+                height: 100px !important;
+                border: 1px solid palette('white', '200');
+
+                &:hover {
+                    border-color: palette('black', '200');
+                }
+            }
+        }
+
+        .global-double-menu {
+
+            &.add-blog-menu {}
+
+            &.add-buttons-menu {}
+
+            &.add-buttons-menu {}
+
+            &.add-composition-menu {}
+
+            &.add-contact-menu {}
+
+            &.add-imported-data-menu {}
+
+            &.add-input-menu {}
+
+            &.add-layout-tool-menu {}
+
+            &.add-media-menu {}
+
+            &.add-members-menu {}
+
+            &.add-menus-and-search-menu {}
+
+            &.add-store {}
+
+            &.add-text-menu {}
+
+            &.add-wireframes-menu {}
+        }
+    }
+
+    &.inspector-drawer {
+        .inspector {
+            .panel-control {
+                button {
+                    border-bottom: 2px solid palette('white', '200');
+                }
+            }
+
+            // .size-option-buttons{
+            //     border-radius: 4px;
+            //     border: 1px solid palette('white','200');
+
+            //     button{
+            //         &.selected{
+            //             outline: 1px solid palette('blue','A400');
+            //             color: palette('blue','A700') !important;
+            //             background-color: palette('blue','100');
+            //         }
+            //     }
+            // }
+        }
+    }
+}

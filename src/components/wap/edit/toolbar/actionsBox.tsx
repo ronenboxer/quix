@@ -1,4 +1,5 @@
 import { useSvg } from "@/components/shared/useSvg";
+import VerticalDivider from "@/components/shared/verticalDivider";
 import { Box, IconButton, Tooltip } from "@mui/material";
 
 interface ActionsBoxProps {
@@ -21,26 +22,29 @@ export default function ActionsBox(props: ActionsBoxProps) {
                     <IconButton
                         className="action-button"
                         onClick={undoHandler}
-                    >{useSvg('header_undo')}</IconButton>
+                    >{useSvg('headerUndo')}</IconButton>
                 </Tooltip>
                 :
-                    <IconButton
-                        className="action-button white-200 fill"
-                        disabled
-                    >{useSvg('header_undo')}</IconButton>
+                <IconButton
+                    className="action-button white-200-fill"
+                    disabled
+                >{useSvg('headerUndo')}</IconButton>
             }
             {isRedoable
                 ? <Tooltip title="Redo" disableFocusListener disableTouchListener>
                     <IconButton
                         className="action-button"
                         onClick={redoHandler}
-                    >{useSvg('header_redo')}</IconButton>
+                    >{useSvg('headerRedo')}</IconButton>
                 </Tooltip>
                 :
-                    <IconButton
-                        className="action-button white-200 fill"
-                        disabled
-                    >{useSvg('header_redo')}</IconButton>
+                <IconButton
+                    className="action-button white-200-fill"
+                    disabled
+                >{useSvg('headerRedo')}</IconButton>
             }
+            <VerticalDivider height={50} colorClassName="white-200" styles={{
+                marginInline: '8px'
+            }}/>
         </Box>)
 }

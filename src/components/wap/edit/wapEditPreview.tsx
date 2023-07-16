@@ -1,4 +1,4 @@
-import { GridLayout, HtmlTags, PageBreakpoint, PageType, SectionType, SizeMap, SizeUnit, Wap, WapContainerEl, WapElement, WapPage, WapSection } from "@/model/wap"
+import { GridLayout, HtmlTags, PageBreakpoint, PageType, SectionType, GridSizeMap, GridSizeUnit, Wap, WapContainerEl, WapElement, WapPage, WapSection, HtmlContainerTags } from "@/model/wap"
 import { Box, Container, Typography } from "@mui/material"
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import EditSection from "./preview/section"
@@ -24,18 +24,19 @@ interface WapEditPreviewProps {
     selectedGridIdx: { orientation: Orientation, idx: number }
     onSelectGridIdx: (idx: number, orientation?: Orientation) => void
     onAddSection: (idx: number, sectionType: SectionType, isVertical: boolean, isGlobal: boolean) => void
-    onSetGridLayout: (cont: WapContainerEl | WapSection<SectionType>, grid: GridLayout, bp: number) => void
-    onUpdateGridLayout: (props: {
-        container: WapContainerEl | WapSection<SectionType>
+    onSetGridLayout: <T extends WapContainerEl<HtmlContainerTags>>(cont: T, grid: GridLayout, bp: number) => void
+    onUpdateGridLayout: <T extends WapContainerEl<HtmlContainerTags>>(props: {
+        container: T
         orientation: Orientation
         gridLayout: WapGridCellSize[]
         bp: number
     }) => void
+    onAddGridColOrRow: <T extends WapContainerEl<HtmlContainerTags>>(props: { container: T, bp: number, orientation: Orientation, idx: number }) => void
 }
 
 export default function WapEditPreview(props: WapEditPreviewProps) {
     // PROPS
-    const { wap, pageRefMap, currPage, currBreakpoint, onSetWapEditPreviewRef, currScreenWidth, onSetCurrScreenWidth, selectedEl, onSetSelectedEl, selectedGridIdx, onSelectGridIdx, onAddSection, onSetGridLayout, onUpdateGridLayout } = props
+    const { wap, pageRefMap, currPage, currBreakpoint, onSetWapEditPreviewRef, currScreenWidth, onSetCurrScreenWidth, selectedEl, onSetSelectedEl, selectedGridIdx, onSelectGridIdx, onAddSection, onSetGridLayout, onUpdateGridLayout, onAddGridColOrRow } = props
     const bp = currBreakpoint.start
 
     // Model
@@ -134,17 +135,16 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
         sectionType: SectionType,
         isVertical: boolean,
         isGlobal: boolean) { onAddSection(idx, sectionType, isVertical, isGlobal) }
-    function sectionGridLayoutHandler(cont: WapContainerEl | WapSection<SectionType>, grid: GridLayout, bp: number) {
+    function sectionGridLayoutHandler<T extends WapContainerEl<HtmlContainerTags>>(cont: T, grid: GridLayout, bp: number) {
         onSetGridLayout(cont, grid, bp)
     }
     function mouseLastClickPosHandler(pos: { x: number, y: number }) { setLastMouseClickPos(pos) }
     function selectGridIdxHandler(idx: number, orientation: Orientation = 'cols') { onSelectGridIdx(idx, orientation) }
 
-    // Layout
-    function draggedGridIdxHandler(idx: number) { setDraggedGridIdx(idx) }
+    // Container
     function compareAndUpdateGrid() {
         if (!selectedEl) return
-        const container = selectedEl as WapContainerEl
+        const container = selectedEl as WapContainerEl<HtmlContainerTags>
         const orientation = dragMode!.replace('grid-resize-', '').replace('grid-canvas-edit-', '') as Orientation
 
         if ((dragMode === 'grid-canvas-edit-cols' || dragMode === 'grid-canvas-edit-rows') && !draggedGridIdx) {
@@ -182,10 +182,14 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
         //     bp
         // })
     }
+    function addGridColOrRowHandler<T extends WapContainerEl<HtmlContainerTags>>(props: { container: T, bp: number, orientation: Orientation, idx: number }){ onAddGridColOrRow(props)}
+
+    // Layout
+    function draggedGridIdxHandler(idx: number) { setDraggedGridIdx(idx) }
 
     function gridDragHandler(ev: MouseEvent) {
         const contRefObj = getElementRefById(pageRefMap, selectedEl!.id)!.map!
-        const container = selectedEl! as WapContainerEl
+        const container = selectedEl! as WapContainerEl<HtmlContainerTags>
         const orientation: Orientation = dragMode!.includes('cols')
             ? 'cols'
             : 'rows'
@@ -231,7 +235,7 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
     function gridCanvasDragHandler(ev: MouseEvent) {
         const contRefObj = getElementRefById(pageRefMap, selectedEl!.id)!.map!
         const { top, left, width, height } = contRefObj.ref!.getBoundingClientRect()
-        const container = selectedEl! as WapContainerEl
+        const container = selectedEl! as WapContainerEl<HtmlContainerTags>
         const orientation: Orientation = dragMode!.includes('cols')
             ? 'cols'
             : 'rows'
@@ -592,21 +596,22 @@ export default function WapEditPreview(props: WapEditPreviewProps) {
 
                 </Box>
             </Box>
-                {wapEditPreviewRef.current && <SectionEditToolsOverlays
-                    viewMode={viewMode}
-                    onSetViewMode={viewModeHandler}
-                    currBreakpoint={currBreakpoint}
-                    innerTopDelta={-(appBarHeight + wapEditToolbarHeight + 2)}
-                    selectedEl={selectedEl}
-                    onSelectGridIdx={selectGridIdxHandler}
-                    pageRefMap={pageRefMap}
-                    currPage={currPage}
-                    containerSize={globalContainerSize}
-                    onSetGridLayout={sectionGridLayoutHandler}
-                    relativeMousePos={lastMouseClickPos}
-                    editedGrid={editedGrid}
-                    dragMode={dragMode}
-                />}
+            {wapEditPreviewRef.current && <SectionEditToolsOverlays
+                viewMode={viewMode}
+                onSetViewMode={viewModeHandler}
+                currBreakpoint={currBreakpoint}
+                innerTopDelta={-(appBarHeight + wapEditToolbarHeight + 2)}
+                selectedEl={selectedEl}
+                onSelectGridIdx={selectGridIdxHandler}
+                pageRefMap={pageRefMap}
+                currPage={currPage}
+                containerSize={globalContainerSize}
+                onSetGridLayout={sectionGridLayoutHandler}
+                onAddGridColOrRow={addGridColOrRowHandler}
+                relativeMousePos={lastMouseClickPos}
+                editedGrid={editedGrid}
+                dragMode={dragMode}
+            />}
 
         </Container>
     )

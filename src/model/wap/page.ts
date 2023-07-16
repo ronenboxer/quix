@@ -1,8 +1,9 @@
 import { makeId } from "@/services/util.service"
-import { OperationStatusObject, WapPageType, WapScreenType, WapSectionType } from "./misc"
+import { OperationStatusObject, StylesMap, WapPageType, WapScreenType, WapSectionType } from "./misc"
 import { Section } from "./section"
 import { WapObject } from "./wap"
 import { Container } from "./container"
+import { CSSProperties } from "react"
 
 const MIN_BREAKPOINT = 320
 const MAX_BREAKPOINT = 10000
@@ -18,6 +19,11 @@ export class Page<T extends WapPageType> {
     protected _id = makeId()
     protected _name = 'Page'
     protected _breakpoints: number[] = Page.defaultBreakpoints
+    protected _styles: StylesMap = Page.defaultBreakpoints.reduce((map, bp) => {
+        map[bp] = {}
+        return map
+    }, {} as StylesMap)
+    protected _globalStyles: CSSProperties = {}
     protected _sections: {
         [sectionId: string]: WapSectionType
     } = {}
@@ -64,6 +70,10 @@ export class Page<T extends WapPageType> {
     // Props
     get id() { return this._id }
     get name() { return this._name }
+    get styles() { return this._styles }
+    set styles(styles: StylesMap) { this._styles = styles }
+    get globalStyles() { return this._globalStyles }
+    set globalStyles(styles: CSSProperties) { this._globalStyles = styles }
     get type() { return this._type }
     get title() { return this._title }
     set title(title: string) { this._title = title }

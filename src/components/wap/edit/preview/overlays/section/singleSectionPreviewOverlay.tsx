@@ -3,9 +3,9 @@ import { Box } from "@mui/material";
 import { blue, lightGreen } from "@mui/material/colors";
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import AddSectionButtons from "./addSectionButtons";
-import GridDragLines from "./gridDragLines";
+import GridDragLines from "../containers/grid/gridDragLines";
+import GridCanvasEdit from "../containers/grid/gridCanvasEdit";
 import { DragMode, Orientation, RefMap, ViewMode } from "@/model/DOM";
-import GridCanvasEdit from "./gridCanvasEdit";
 import { WapGridCellSize } from "@/model/wap/misc";
 
 interface SectionOverlayProps {

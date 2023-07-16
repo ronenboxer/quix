@@ -17,7 +17,9 @@ export class Section<T extends WapSectionType> extends Container<'section'> {
         this._parentWap = parentWap;
         [...bps, Page.minBreakpoint].forEach(bp => {
             this.styles[bp] = {
-                width: '100%',
+                width: isVertical
+                    ? '300px'
+                    : '100%',
                 height: isVertical
                     ? '100%'
                     : '300px',

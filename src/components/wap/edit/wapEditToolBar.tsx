@@ -1,7 +1,7 @@
 import { Flag } from "../../../model/DOM"
 import { AppBar, Box, Container, ThemeProvider, Toolbar, createTheme } from "@mui/material"
 import { useEffect, useState } from "react"
-import { HtmlTags, OperationStatus, PageBreakpoint, PageType, SectionType, Wap, WapContainerEl, WapElement, WapPage, WapSection } from "@/model/wap"
+import { GridLayout, HtmlContainerTags, HtmlTags, OperationStatus, PageBreakpoint, PageType, SectionType, Wap, WapContainerEl, WapElement, WapPage, WapSection } from "@/model/wap"
 import { grey, blue, deepPurple } from "@mui/material/colors"
 import LangListMenu from "./toolbar/langListMenu"
 import PageListMenu from "./toolbar/pageListMenu"
@@ -35,16 +35,18 @@ interface WapEditToolbarProps {
     isRedoable: boolean
     onUndo: () => void
     onRedo: () => void
-    selectedEl: WapPage<PageType> | WapSection<SectionType> | WapContainerEl | WapElement<HtmlTags> | null
-    onSetSelectedEl: (el: WapElement<HtmlTags> | WapPage<PageType> | null) => void
-    breadcrumbs: (WapPage<PageType> | WapContainerEl | WapSection<SectionType> | WapElement<HtmlTags>)[]
+    onSetGridLayout: <T extends WapContainerEl<HtmlContainerTags>>(cont: T, grid: GridLayout, bp: number) => void
+    selectedEl: WapPage<PageType> | WapSection<SectionType> | WapContainerEl<HtmlContainerTags> | WapElement<HtmlTags> | null
+    onSetSelectedEl: <T extends WapElement<HtmlTags> | WapPage<PageType>>(el: T | null) => void
+    breadcrumbs: Array<WapElement<HtmlTags> | WapPage<PageType>>
 }
 
 const MAX_BREAKPOINT_COUNT = WapPage.maxBreakpointCount
 
 export default function WapEditToolBar(props: WapEditToolbarProps) {
-    const { wap, flags, currFlag, onSetCurrFlag, currPageId, onSetCurrPage, breakpoints, currBreakpoint, onSetCurrBreakpoint, currScreenWidth, onSetCurrScreenWidth, currZoomMultiplier, onSetCurrZoomMultiplier, onAddBreakpoint, onRemoveBreakpoint, onUpdateBreakpoint, onValidateNewBreakpoint, onValidateUpdateBreakpoint, isRedoable, isUndoable, onRedo, onUndo, selectedEl, onSetSelectedEl, breadcrumbs } = props
-
+    const { wap, flags, currFlag, onSetCurrFlag, currPageId, onSetCurrPage, breakpoints, currBreakpoint, onSetCurrBreakpoint, currScreenWidth, onSetCurrScreenWidth, currZoomMultiplier, onSetCurrZoomMultiplier, onAddBreakpoint, onRemoveBreakpoint, onUpdateBreakpoint, onValidateNewBreakpoint, onValidateUpdateBreakpoint, isRedoable, isUndoable, onRedo, onUndo, selectedEl, onSetSelectedEl, breadcrumbs, onSetGridLayout } = props
+    const bp = currBreakpoint.start
+    
     // Menus togglers
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
     const [isPageMenuOpen, setIsPageMenuOpen] = useState(false)
@@ -101,7 +103,10 @@ export default function WapEditToolBar(props: WapEditToolbarProps) {
             ? null
             : drawer)
     }
-    function selectedElHandler(el: WapElement<HtmlTags> | WapPage<PageType> | null) { onSetSelectedEl(el) }
+    function containerGridLayoutHandler<T extends WapContainerEl<HtmlContainerTags>>(cont: T, grid: GridLayout) {
+        onSetGridLayout(cont, grid, bp)
+    }
+    function selectedElHandler<T extends  WapElement<HtmlTags> | WapPage<PageType>>(el:T | null) { onSetSelectedEl(el) }
 
     useEffect(() => {
 
@@ -119,7 +124,7 @@ export default function WapEditToolBar(props: WapEditToolbarProps) {
                     boxShadow: 'none',
                 }}
             >
-                <Container className="mx-0">
+                <Container className="mx-0 max-w-unset justify-start">
                     <Toolbar disableGutters className="tools">
                         <WapEditTools />
                         <LangListMenu
@@ -168,7 +173,9 @@ export default function WapEditToolBar(props: WapEditToolbarProps) {
                             onSetDrawer={setCommentsAndInspectorDrawerHandler}
                             selectedEl={selectedEl}
                             onSetSelectedEl={selectedElHandler}
+                            onSetGridLayout={containerGridLayoutHandler}
                             breadcrumbs={breadcrumbs}
+                            bp={bp}
                         />
                     </Toolbar>
                 </Container>

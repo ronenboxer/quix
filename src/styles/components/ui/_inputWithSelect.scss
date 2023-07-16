@@ -1,0 +1,14 @@
+.input-with-select-container {
+
+    .input-container {
+        border: 1px solid palette('white', '200');
+
+        input {
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                display: none;
+            }
+        }
+    }
+}

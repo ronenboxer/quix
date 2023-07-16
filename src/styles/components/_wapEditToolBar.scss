@@ -1,6 +1,6 @@
 .wap-edit-toolbar {
     height: 52px;
-    border-block: 1px solid palette('white','200');
+    border-block: 1px solid palette('white', '200');
 
     .tools {
         height: 50px;
@@ -10,7 +10,7 @@
         .lang-tools,
         .page-list-select-tool,
         .breakpoints-tools {
-            border-inline-end: 1px solid palette('white','200');
+            // border-inline-end: 1px solid palette('white', '200');
         }
 
         .breakpoints-tools {
@@ -85,43 +85,49 @@
 
                     .form-control {
                         &.cancel-new-breakpoint-button {}
-                        &.submit-new-breakpoint-button{}
+
+                        &.submit-new-breakpoint-button {}
 
                     }
                 }
             }
-            
-            .screen-width-control{
+
+            .screen-width-control {
                 // border-inline-end: 1px solid palette('white','200');
             }
         }
-        
-        .action-tools{
-            border-inline-end: 1px solid palette('white','200');
-            .action-button{}
+
+        .action-tools {
+            // border-inline-end: 1px solid palette('white', '200');
+
+            .action-button {}
         }
 
-        .zoom-controller{
-            .zoom-options{
-                .zoom-control{
-                    border-inline-end: 1px solid palette('white','200');
+        .zoom-controller {
+            .zoom-options {
+                .zoom-control {
+                    border-inline-end: 1px solid palette('white', '200');
                     height: inherit;
-                    
-                    .zoom-button{}
-                    .zoom-preview{
+
+                    .zoom-button {}
+
+                    .zoom-preview {
                         width: 50px;
                     }
                 }
             }
-            
+
         }
 
-        .notifications-menu{}
-        .misc-tools{
+        .notifications-menu {}
+
+        .misc-tools {
             
-            .splitter{
-                border-inline-end: 1px solid palette('white','200');
+            button svg {
+                // fill: palette('black', '200');
             }
+            
+            
         }
     }
 }

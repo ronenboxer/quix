@@ -3,7 +3,7 @@ import { CSSProperties } from "react"
 import { objectRecursiveUpdate } from "./util.service"
 import { addBp, removeBp, updateBp } from "./wap.service.handlers/breakpoints.undo.actionLogs"
 import { addSection } from "./wap.service.handlers/sections.undo.actionLogs"
-import { setGrid, updateGridLayout, updateGridLayoutDeprecated } from "./wap.service.handlers/containers.undo.actionLogs"
+import { addGridColOrRow, setGrid, updateGridLayout } from "./wap.service.handlers/containers.undo.actionLogs"
 
 export interface UndoHandler {
 
@@ -34,3 +34,4 @@ export const getAddSectionActionLog = addSection
 // Containers
 export const getSetContainerGridActionLog = setGrid
 export const getUpdateGridLayoutActionLog = updateGridLayout
+export const getAddGridColOrRowActionLog = addGridColOrRow

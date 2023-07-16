@@ -4,7 +4,7 @@ export type Text = 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'lab
 export type HtmlAction = 'a' | 'button'
 export type HtmlMedia = 'img' | 'video' | 'iframe'
 export type HtmlSection = 'section'
-export type HtmlContainer = 'ul' | 'ol' | 'li' | 'div' | 'form' | 'nav' | 'header' | 'footer'
+export type HtmlContainer = 'ul' | 'ol' | 'li' | 'div' | 'form' | 'nav' | 'header' | 'footer' | 'section'
 export type HtmlInput = 'input' | 'textarea' | 'select'
 export type WapPageType = "Main Pages" | "Lightboxes" | "Member Pages" | "NewsPages (Dynamic)" | "Projects Pages (Dynamic)" | "Blog Pages" | "Stores"
 export type WapSectionType = 'header' | 'footer' | 'section'
@@ -21,12 +21,14 @@ export interface StylesMap {
     [key: number]: CSSProperties
 }
 
-export type WapSizeUnit = 'fr' | 'px' | '%' | 'vw' | 'vh'
-export type WapSizeMap = { [K in WapSizeUnit]: number }
+export type WapGridSizeUnit = 'fr' | 'px' | '%' | 'vw' | 'vh'
+export type WapGridSizeMap = { [K in WapGridSizeUnit]: number }
+export type WapElSizeOptions = 'width' | 'min-width' | 'max-width' | 'min-height' | 'max-height' | 'height'
+export type WapElSizeUnit = 'px' | 'none' | 'vw' | 'vh' | '%' | 'max-c' | 'min-c' | 'fit-c' | 'auto' | 'unset' | 'inherit'
 
 export interface WapGridCellSizeFormat {
     value: number
-    unit: WapSizeUnit
+    unit: WapGridSizeUnit
     content?: 'min-content' | 'max-content'
 }
 
@@ -34,11 +36,11 @@ export interface WapGridCellSize extends WapGridCellSizeFormat {
     minmax?: {
         min: {
             value: number
-            unit: WapSizeUnit
+            unit: WapGridSizeUnit
         }
         max: {
             value: number
-            unit: WapSizeUnit
+            unit: WapGridSizeUnit
         }
     }
 }

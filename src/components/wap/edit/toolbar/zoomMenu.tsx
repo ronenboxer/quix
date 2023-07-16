@@ -13,7 +13,7 @@ export default function ZoomMenu(props: ZoomMenuProps) {
     const { onSetZoomMultiplier, currZoomMultiplier } = props
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-    const menuButton = useSvg('header_zoom')
+    const menuButton = useSvg('headerZoom')
 
     function zoomMultiplierHandler(zoom: number = 1) {
         if (zoom === currZoomMultiplier) return
@@ -64,7 +64,7 @@ export default function ZoomMenu(props: ZoomMenuProps) {
                             : {}
                     }}
                 >
-                    {useSvg('header_zoom_out')}
+                    {useSvg('headerZoomOut')}
                 </IconButton>
                 <Typography className="zoom-preview text-center">
                     {getZoomPercentage()}</Typography>
@@ -77,7 +77,7 @@ export default function ZoomMenu(props: ZoomMenuProps) {
                             : {}
                     }}
                 >
-                    {useSvg('header_zoom_in')}
+                    {useSvg('headerZoomIn')}
                 </IconButton>
             </Box>
             <Button onClick={() => zoomMultiplierHandler(1)}>

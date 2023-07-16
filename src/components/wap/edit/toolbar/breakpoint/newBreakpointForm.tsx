@@ -1,5 +1,6 @@
 import { SVG, useSvg } from "@/components/shared/useSvg"
 import { OperationStatus, WapPage } from "@/model/wap"
+import { capitalize } from "@/services/util.service"
 import { Box, Button, Icon, InputAdornment, OutlinedInput, Tooltip } from "@mui/material"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 
@@ -61,7 +62,7 @@ export default function NewBreakpointForm(props: EditBreakpointFormProps) {
             ref={containerRef}
         >
             <Icon className="mx-8">
-                {useSvg('header_' + WapPage.screenType(newVal) as SVG)}
+                {useSvg('header' + capitalize(WapPage.screenType(newVal)) as SVG)}
             </Icon>
             <Tooltip
                 PopperProps={{

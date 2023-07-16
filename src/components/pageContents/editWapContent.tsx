@@ -1,13 +1,13 @@
 "use client"
 import WapEditToolBar from "@/components/wap/edit/wapEditToolBar"
-import { DOMGridLayout, Flag, Orientation, PageRefMap } from "@/model/DOM"
-import { GridLayout, HtmlTags, PageBreakpoint, PageType, SectionType, SizeMap, SizeUnit, Wap, WapContainerEl, WapElement, WapPage, WapSection } from "@/model/wap"
+import { DOMGridLayout, Flag, Orientation, PageRefMap, RefMap } from "@/model/DOM"
+import { GridLayout, HtmlTags, PageBreakpoint, PageType, SectionType, GridSizeMap, GridSizeUnit, Wap, WapContainerEl, WapElement, WapPage, WapSection, HtmlContainerTags } from "@/model/wap"
 import { Button, ThemeProvider, createTheme, responsiveFontSizes } from "@mui/material"
 import { useSnackbar, VariantType, SnackbarKey } from 'notistack'
 import { ReactNode, useEffect, useRef, useState } from "react"
 import WapEditPreview from "../wap/edit/wapEditPreview"
 import { getAbsoluteSize, getElementRefById, makeId } from "@/services/util.service"
-import { getAddBpActionLog, getAddSectionActionLog, getRemoveBpActionLog, getSetContainerGridActionLog, getUpdateBpActionLog, getUpdateGridLayoutActionLog } from "@/services/wap.service"
+import { getAddBpActionLog, getAddGridColOrRowActionLog, getAddSectionActionLog, getRemoveBpActionLog, getSetContainerGridActionLog, getUpdateBpActionLog, getUpdateGridLayoutActionLog } from "@/services/wap.service"
 import { WapGridCellSize } from "@/model/wap/misc"
 
 interface WapEditContentProps {
@@ -78,7 +78,7 @@ export default function EditWapContent(props: WapEditContentProps) {
     }
     function getBreadcrumbs() {
         if (!wapEditPreviewRef.current || !selectedEl || selectedEl?.name === 'Page') return []
-        let cont: WapContainerEl | WapSection<SectionType> | WapElement<HtmlTags>
+        let cont: WapContainerEl<HtmlContainerTags> | WapSection<SectionType> | WapElement<HtmlTags>
         const { breadcrumbs } = getElementRefById(wapEditPreviewRef.current, selectedEl.id)!
         return [currPage, ...breadcrumbs.map((id, idx) => {
             if (idx === 0) {
@@ -125,7 +125,7 @@ export default function EditWapContent(props: WapEditContentProps) {
         }
         return res
     }
-    function contGridLayoutHandler(cont: WapSection<SectionType> | WapContainerEl, grid: GridLayout, bp: number) {
+    function contGridLayoutHandler<T extends WapContainerEl<HtmlContainerTags>>(cont: T, grid: GridLayout, bp: number) {
         const contRefObj = getElementRefById(wapEditPreviewRef.current, cont.id)!.map!
         const { sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes } = getAbsoluteSize(contRefObj.ref!.offsetWidth || 0, cont.gridTemplateCols(bp))
         const { sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes } = getAbsoluteSize(contRefObj.ref!.offsetHeight || 0, cont.gridTemplateRows(bp))
@@ -146,32 +146,34 @@ export default function EditWapContent(props: WapEditContentProps) {
                 setCurrWapHandler(wap)
                 closeSnackbarById(actionId)
                 snackbarResponse()
-                contRefObj.grid = {
-                    cols: {
-                        ...{ sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes },
-                        idxs: [-1, -1],
-                    },
-                    rows: {
-                        ...{ sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes },
-                        idxs: [-1, -1],
-                    }
-                }
+                updateRefObjectGrid(cont, bp)
+                // contRefObj.grid = {
+                //         cols: {
+                //                 ...{ sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes },
+                //                 idxs: [-1, -1],
+                //             },
+                //             rows: {
+                //                     ...{ sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes },
+                //                     idxs: [-1, -1],
+                //                 }
+                //             }
             },
             forth: () => {
                 snackbarResponse()
                 setCurrWapHandler(wap)
                 const { sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes } = getAbsoluteSize(contRefObj.ref!.offsetWidth || 0, cont.gridTemplateCols(bp))
                 const { sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes } = getAbsoluteSize(contRefObj.ref!.offsetHeight || 0, cont.gridTemplateRows(bp))
-                contRefObj.grid = {
-                    cols: {
-                        ...{ sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes },
-                        idxs: [-1, -1],
-                    },
-                    rows: {
-                        ...{ sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes },
-                        idxs: [-1, -1],
-                    }
-                }
+                updateRefObjectGrid(cont, bp)
+                // contRefObj.grid = {
+                //     cols: {
+                //         ...{ sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes },
+                //         idxs: [-1, -1],
+                //     },
+                //     rows: {
+                //         ...{ sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes },
+                //         idxs: [-1, -1],
+                //     }
+                // }
             }
         })
         cleanRedoHandler()
@@ -180,10 +182,10 @@ export default function EditWapContent(props: WapEditContentProps) {
     }
 
     // Containers
-    function updateContainerGridLayoutHandlerDeprecated(props: {
-        container: WapContainerEl | WapSection<SectionType>
+    function updateContainerGridLayoutHandlerDeprecated<T extends WapContainerEl<HtmlContainerTags>>(props: {
+        container:T
         size: number,
-        sizeMap: { [T in SizeUnit]: number }
+        sizeMap: { [T in GridSizeUnit]: number }
         orientation: Orientation
         croppedGrid: DOMGridLayout
         croppedGridComparison: DOMGridLayout
@@ -198,8 +200,8 @@ export default function EditWapContent(props: WapEditContentProps) {
         //     cleanRedoHandler()
         // }
     }
-    function updateContainerGridLayoutHandler(props: {
-        container: WapContainerEl | WapSection<SectionType>
+    function updateContainerGridLayoutHandler<T extends WapContainerEl<HtmlContainerTags>>(props: {
+        container: T
         orientation: Orientation
         gridLayout: WapGridCellSize[],
         bp: number
@@ -213,6 +215,35 @@ export default function EditWapContent(props: WapEditContentProps) {
             })
             cleanRedoHandler()
         }
+    }
+    function addGridColOrRow<T extends WapContainerEl<HtmlContainerTags>>(props: { container: T, bp: number, orientation: Orientation, idx: number }) {
+        const { container, bp, orientation, idx } = props
+        const res = getAddGridColOrRowActionLog({ container, bp, orientation, idx })
+        if (res.isAdded) {
+            const { action, counterAction } = res.payload!
+            const actionId = makeId()
+            const snackbarResponse = () => renderedSnackbarHandler(res.message!.toString(), {
+                variant: 'default',
+                action: key => {
+                    snackbarKeys.current[actionId] = key
+                    return getSnackbarUndo(key)
+                }
+            })
+            onAddActionToLog('undo', action, counterAction, {
+                back: () => {
+                    closeSnackbarById(actionId)
+                    updateRefObjectGrid(container, bp)
+                },
+                forth: () => {
+                    snackbarResponse()
+                    updateRefObjectGrid(container, bp)
+                }
+            })
+            cleanRedoHandler()
+            snackbarResponse()
+        } else renderedSnackbarHandler(res.message!.toString(), {
+            variant: 'error'
+        })
     }
 
     // Flags
@@ -359,16 +390,9 @@ export default function EditWapContent(props: WapEditContentProps) {
     function cleanRedoHandler() { onCleanRedo() }
 
     // DOM Selection
-    function setInspectedElHandler(el: WapElement<HtmlTags> | null) { setInspectedEl(el) }
     function selectedElHandler(el: WapElement<HtmlTags> | WapPage<PageType> | null) {
         if (el?.id !== selectedEl?.id) {
             setSelectedEl(el)
-            selectGridIdxHandler(-1)
-        }
-    }
-    function selectedSectionHandler(section: WapSection<SectionType> | null) {
-        if (section?.id !== selectedSection?.id) {
-            setSelectedSection(_ => section)
             selectGridIdxHandler(-1)
         }
     }
@@ -404,6 +428,22 @@ export default function EditWapContent(props: WapEditContentProps) {
     function getSnackbarDismiss(key: SnackbarKey) {
         return <Button sx={{ color: 'white' }} onClick={() => closeSnackbarHandler(key)}>Dismiss</Button>
     }
+    function updateRefObjectGrid<T extends WapContainerEl<HtmlContainerTags>>(cont: T, bp: number) {
+        const contRefObj = getElementRefById(wapEditPreviewRef.current, cont.id)!.map!
+        const { sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes } = getAbsoluteSize(contRefObj.ref!.offsetWidth || 0, cont.gridTemplateCols(bp))
+        const { sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes } = getAbsoluteSize(contRefObj.ref!.offsetHeight || 0, cont.gridTemplateRows(bp))
+        contRefObj.grid = {
+            cols: {
+                ...{ sizeMap: colMap, totalUnits: colUnits, absoluteSizes: colSizes, cumulativeSizes: colCumulativeSizes },
+                idxs: [-1, -1],
+            },
+            rows: {
+                ...{ sizeMap: rowMap, totalUnits: rowUnits, absoluteSizes: rowSizes, cumulativeSizes: rowCumulativeSizes },
+                idxs: [-1, -1],
+            }
+        }
+    }
+
     useEffect(() => {
         if (!currScreenWidth && wapEditPreviewRef.current.pageRef) setCurrScreenWidthHandler(wapEditPreviewRef.current.pageRef.getBoundingClientRect().width)
     }, [wapEditPreviewRef.current])
@@ -435,6 +475,7 @@ export default function EditWapContent(props: WapEditContentProps) {
                 onRedo={redoHandler}
                 selectedEl={selectedEl}
                 onSetSelectedEl={selectedElHandler}
+                onSetGridLayout={contGridLayoutHandler}
                 breadcrumbs={getBreadcrumbs()}
             />
             <WapEditPreview
@@ -452,6 +493,7 @@ export default function EditWapContent(props: WapEditContentProps) {
                 onAddSection={addSectionHandler}
                 onSetGridLayout={contGridLayoutHandler}
                 onUpdateGridLayout={updateContainerGridLayoutHandler}
+                onAddGridColOrRow={addGridColOrRow}
             />
         </ThemeProvider>
     )

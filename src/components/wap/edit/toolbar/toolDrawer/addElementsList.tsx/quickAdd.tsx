@@ -13,52 +13,52 @@ export default function QuickAdd(props: QuickAddProps) {
     const items: ItemList = [
         {
             title: 'Title',
-            icon: useSvg('add_title'),
+            icon: useSvg('addTitle'),
             name: 'title'
         },
         {
             title: 'Paragraph',
-            icon: useSvg('add_paragraph'),
+            icon: useSvg('addParagraph'),
             name: 'paragraph'
         },
         {
             title: 'Button',
-            icon: useSvg('add_button'),
+            icon: useSvg('addButton'),
             name: 'button'
         },
         {
             title: 'Image',
-            icon: useSvg('add_image'),
+            icon: useSvg('addImage'),
             name: 'image'
         },
         {
             title: 'Video',
-            icon: useSvg('add_video'),
+            icon: useSvg('addVideo'),
             name: 'video'
         },
         {
             title: 'Gallery',
-            icon: useSvg('add_gallery'),
+            icon: useSvg('addGallery'),
             name: 'gallery'
         },
         {
             title: 'Container',
-            icon: useSvg('add_container'),
+            icon: useSvg('addContainer'),
             name: 'container'
         },
         {
             title: 'Layouter',
-            icon: useSvg('add_layouter'),
+            icon: useSvg('addLayouter'),
             name: 'layouter'
         },
         {
             title: 'Repeater',
-            icon: useSvg('add_repeater'),
+            icon: useSvg('addRepeater'),
             name: 'repeater'
         },
         {
             title: 'IFrame',
-            icon: useSvg('add_iframe'),
+            icon: useSvg('addIframe'),
             name: 'iframe'
         },
     ]

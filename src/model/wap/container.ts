@@ -1,12 +1,12 @@
-import { formatNumber, getFormattedSegments, extractValueAndUnit } from "@/services/util.service"
+import { formatNumber, getFormattedSegments, extractGridValueAndUnit } from "@/services/util.service"
 import { Element } from "./element"
-import { Html, OperationStatusObject, WapGridLayout, WapGridCellSize, WapGridCellSizeFormat, WapSizeUnit, WapSectionType, WapSizeMap } from "./misc"
+import { Html, HtmlContainer, OperationStatusObject, WapGridLayout, WapGridCellSize, WapGridCellSizeFormat, WapGridSizeUnit, WapSectionType, WapGridSizeMap } from "./misc"
 import { WapObject } from "./wap"
 import { DOMGridLayout, Orientation } from "../DOM"
-import { GridCellSize } from "."
+import { GridCellSize, GridLayout } from "."
 
 
-export class Container<T extends Html = 'div'> extends Element<T> {
+export class Container<T extends HtmlContainer = 'div'> extends Element<T> {
     static defaultGridSize: WapGridCellSize = {
         value: 1, unit: 'fr',
         // minmax: {
@@ -21,7 +21,7 @@ export class Container<T extends Html = 'div'> extends Element<T> {
         // }
     }
     protected _name = 'Container'
-    protected _items: { [id: string]: Element<Html> | Container<Html> } = {}
+    protected _items: { [id: string]: Element<Html> | Container<HtmlContainer> } = {}
     protected _layers: string[] = []
     // protected _gridLayout: WapGridLayout = {
     //     rows: [{
@@ -53,13 +53,15 @@ export class Container<T extends Html = 'div'> extends Element<T> {
             this.styles[bp] = {
                 ...this.styles[bp],
                 display: 'grid',
+                gridTemplateColumns: '1fr',
+                gridTemplateRows: '1fr'
             }
         })
     }
 
     // Props
     get items() { return this._items }
-    set items(items: { [id: string]: Element<Html> | Container<Html> }) {
+    set items(items: { [id: string]: Element<Html> | Container<HtmlContainer> }) {
         this._layers = this._layers.filter(id => items[id])
         Object.keys(items).forEach(id => {
             if (!this._layers.includes(id)) this._layers.push(id)
@@ -72,7 +74,7 @@ export class Container<T extends Html = 'div'> extends Element<T> {
         this._items = layers.reduce((items, id) => {
             items[id] = this._items[id]
             return items
-        }, {} as { [id: string]: Element<Html> | Container<Html> })
+        }, {} as { [id: string]: Element<Html> | Container<HtmlContainer> })
     }
 
     // Items Methods
@@ -154,6 +156,7 @@ export class Container<T extends Html = 'div'> extends Element<T> {
         this._grids = { ...this._grids }
         if (!this.styles[bp]) this.styles[bp] = {}
         this.styles[bp].gridTemplateRows = Container.getFormattedGridTemplate(gridRows).join(' ')
+        this.globalStyles.gridTemplateRows = Container.getFormattedGridTemplate(gridRows).join(' ')
     }
     set gridCols({ bp, gridCols }: { bp: number, gridCols: WapGridCellSize[] }) {
         if (!this._grids[bp]) this._grids[bp] = {
@@ -164,10 +167,14 @@ export class Container<T extends Html = 'div'> extends Element<T> {
         this._grids = { ...this._grids }
         if (!this.styles[bp]) this.styles[bp] = {}
         this.styles[bp].gridTemplateColumns = Container.getFormattedGridTemplate(gridCols).join(' ')
+        this.globalStyles.gridTemplateColumns = Container.getFormattedGridTemplate(gridCols).join(' ')
+    }
+    set gridLayout({ bp, layout, orientation }: { bp: number, layout: WapGridCellSize[], orientation: Orientation }) {
+        if (orientation === 'cols') this.gridCols = { bp, gridCols: layout }
+        else this.gridRows = { bp, gridRows: layout }
     }
     get gridColsLayout() {
         return (bp: number) => {
-            // debugger
             const lastBpIdx = Math.min(...Object.keys(this._grids).map(k => +k))
             return this._grids[bp]?.cols || this._grids[lastBpIdx]!.cols!
         }
@@ -175,18 +182,37 @@ export class Container<T extends Html = 'div'> extends Element<T> {
     get gridTemplateCols() { return (bp: number) => Container.getFormattedGridTemplate(this.gridColsLayout(bp)) }
     get gridRowsLayout() {
         return (bp: number) => {
-            // debugger
             const lastBpIdx = Math.min(...Object.keys(this._grids).map(k => +k))
             return this._grids[bp]?.rows || this._grids[lastBpIdx]!.rows!
         }
     }
     get gridTemplateRows() { return (bp: number) => Container.getFormattedGridTemplate(this.gridRowsLayout(bp)) }
+    addGridTemplate(bp: number, orientation: Orientation, idx: number): OperationStatusObject<'isAdded', WapGridCellSize[]> {
+        const grid = this.grid(bp)
+        if (!grid) return {
+            isAdded: false,
+            message: 'Grid layout not found',
+            status: 'error'
+        }
+        if (!grid[orientation].length) this.gridLayout = {
+            bp,
+            orientation,
+            layout: [{ ...Container.defaultGridSize }, { ...Container.defaultGridSize }]
+        }
+        else grid[orientation].splice(idx, 0, { ...Container.defaultGridSize })
+        return {
+            isAdded: true,
+            status: 'success',
+            message: `Grid template is ${grid[orientation].length} X ${grid[orientation == 'cols' ? 'rows' : 'cols']?.length || 1}`,
+            payload: grid[orientation]
+        }
+    }
     protected _getUpdatedGridFormatDeprecated(props:
         {
             croppedGrid: DOMGridLayout,
             croppedGridComparison: DOMGridLayout,
             orientation: Orientation,
-            sizeMap: { [K in WapSizeUnit]: number },
+            sizeMap: { [K in WapGridSizeUnit]: number },
             bp: number
         }) {
         const { bp, sizeMap, croppedGrid, croppedGridComparison, orientation } = props
@@ -266,7 +292,7 @@ export class Container<T extends Html = 'div'> extends Element<T> {
             originalGrid: number[],
             modifiedGrid: number[],
             orientation: Orientation,
-            sizeMap: WapSizeMap,
+            sizeMap: WapGridSizeMap,
             bp: number
         }) {
         const { originalGrid, modifiedGrid, orientation, sizeMap, bp } = props
@@ -334,36 +360,38 @@ export class Container<T extends Html = 'div'> extends Element<T> {
     }
     dragNewGridDivider(orientation: Orientation, bp: number, containerWidth: number, dividerPos: number, segments?: WapGridCellSize[]): OperationStatusObject<'isAdded', WapGridCellSize[]> {
         const res = getFormattedSegments(containerWidth, segments || this._grids[bp][orientation], dividerPos)
+        this._styles[bp].gridTemplateColumns = Container.getFormattedGridTemplate(this._grids[bp].cols).join(' ')
+        this._styles[bp].gridTemplateRows = Container.getFormattedGridTemplate(this._grids[bp].rows).join(' ')
         return res
     }
-    updateGrid(props: {
-        bp: number,
-        croppedGrid: DOMGridLayout,
-        croppedGridComparison: DOMGridLayout,
-        orientation: Orientation,
-        sizeMap: { [K in WapSizeUnit]: number }
-    }) {
-        const template = this._getUpdatedGridFormatDeprecated(props)
-        const { bp, orientation } = props
-        if (orientation === 'cols') this.gridCols = { bp, gridCols: template }
-        else this.gridRows = { bp, gridRows: template }
-        // this._gridLayout = {...this._gridLayout}
-        return template
-    }
-    updateGridBeta(props: {
-        originalGrid: number[],
-        modifiedGrid: number[],
-        orientation: Orientation,
-        sizeMap: WapSizeMap,
-        bp: number
-    }) {
-        // debugger
-        const newTemplate = this.getUpdatedGridFormat(props)
-        const { bp, orientation } = props
-        if (orientation === 'cols') this.gridCols = { bp, gridCols: newTemplate }
-        else this.gridRows = { bp, gridRows: newTemplate }
-        return newTemplate
-    }
+    // updateGrid(props: {
+    //     bp: number,
+    //     croppedGrid: DOMGridLayout,
+    //     croppedGridComparison: DOMGridLayout,
+    //     orientation: Orientation,
+    //     sizeMap: { [K in WapGridSizeUnit]: number }
+    // }) {
+    //     const template = this._getUpdatedGridFormatDeprecated(props)
+    //     const { bp, orientation } = props
+    //     if (orientation === 'cols') this.gridCols = { bp, gridCols: template }
+    //     else this.gridRows = { bp, gridRows: template }
+    //     // this._gridLayout = {...this._gridLayout}
+    //     return template
+    // }
+    // updateGridBeta(props: {
+    //     originalGrid: number[],
+    //     modifiedGrid: number[],
+    //     orientation: Orientation,
+    //     sizeMap: WapGridSizeMap,
+    //     bp: number
+    // }) {
+    //     // debugger
+    //     const newTemplate = this.getUpdatedGridFormat(props)
+    //     const { bp, orientation } = props
+    //     if (orientation === 'cols') this.gridCols = { bp, gridCols: newTemplate }
+    //     else this.gridRows = { bp, gridRows: newTemplate }
+    //     return newTemplate
+    // }
     editGrid(orientation: Orientation, bp: number, idx: number, size: WapGridCellSize): OperationStatusObject<'isUpdated', WapGridCellSize[]> {
         if (idx < 0 || idx >= this._grids[bp][orientation].length || !this._grids[bp][orientation][idx]) return {
             isUpdated: false,
@@ -371,9 +399,9 @@ export class Container<T extends Html = 'div'> extends Element<T> {
             message: 'Divider index out of grid array'
         }
         this._grids[bp][orientation].splice(idx, 1, size)
-        const newTemplate = Container.getFormattedGridTemplate(this._grids[bp][orientation]).join(' ')
-        if (orientation === 'cols') this.globalStyles.gridTemplateColumns = newTemplate
-        else this.globalStyles.gridTemplateRows = newTemplate
+        const newTemplate = this._grids[bp][orientation]
+        if (orientation === 'cols') this.gridCols = { bp, gridCols: newTemplate }
+        else this.gridRows = { bp, gridRows: newTemplate }
         return {
             isUpdated: true,
             status: 'success',
@@ -388,22 +416,24 @@ export class Container<T extends Html = 'div'> extends Element<T> {
         }
         this._grids[bp][orientation].splice(idx, 1)
         if (this._grids[bp][orientation].length <= 1) this._grids[bp][orientation] = []
-        const newTemplate = Container.getFormattedGridTemplate(this._grids[bp][orientation]).join(' ')
-        if (orientation === 'cols') this.globalStyles.gridTemplateColumns = newTemplate
-        else this.globalStyles.gridTemplateRows = newTemplate
+        // const newTemplate = Container.getFormattedGridTemplate(this._grids[bp][orientation]).join(' ')
+        if (orientation === 'cols') this.gridCols = { bp, gridCols: this._grids[bp][orientation] }
+        else this.gridRows = { bp, gridRows: this._grids[bp][orientation] }
         return {
             isRemoved: true,
             status: 'success',
             payload: this._grids[bp][orientation]
         }
     }
-    addNewDivider(orientation: Orientation, bp: number, idx: number) {
-        const { defaultGridSize } = Container
-        if (this._grids[bp][orientation].length) this._grids[bp][orientation].splice(idx, 0, defaultGridSize)
-        else this._grids[bp][orientation].push(defaultGridSize, defaultGridSize)
-        const newTemplate = Container.getFormattedGridTemplate(this._grids[bp][orientation]).join(' ')
-        if (orientation === 'cols') this.globalStyles.gridTemplateColumns = newTemplate
-        else this.globalStyles.gridTemplateRows = newTemplate
-        return this.gridRows
-    }
+    // addNewDivider(orientation: Orientation, bp: number, idx: number) {
+    //     const { defaultGridSize } = Container
+    //     if (this._grids[bp][orientation].length) this._grids[bp][orientation].splice(idx, 0, defaultGridSize)
+    //     else this._grids[bp][orientation].push(defaultGridSize, defaultGridSize)
+    //     const newTemplate = Container.getFormattedGridTemplate(this._grids[bp][orientation]).join(' ')
+    //     if (orientation === 'cols') this.gridCols = { bp, gridCols: this._grids[bp][orientation] }
+    //     else this.gridRows = { bp, gridRows: this._grids[bp][orientation] }
+    //     // if (orientation === 'cols') this.globalStyles.gridTemplateColumns = newTemplate
+    //     // else this.globalStyles.gridTemplateRows = newTemplate
+    //     return this._grids[bp][orientation]
+    // }
 }

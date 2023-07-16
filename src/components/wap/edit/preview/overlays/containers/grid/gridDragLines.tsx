@@ -1,12 +1,12 @@
 import { DragMode, DOMGridLayout, Orientation, RefMap, ViewMode } from "@/model/DOM";
-import { SectionType, WapSection } from "@/model/wap";
+import { HtmlContainerTags, SectionType, WapContainerEl, WapSection } from "@/model/wap";
 import { WapGridCellSize } from "@/model/wap/misc";
 import { getAbsoluteGridSizes } from "@/services/util.service";
 import { Box } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 
-interface GridDragLinesProps {
-    section: WapSection<SectionType>
+interface GridDragLinesProps<T extends WapContainerEl<HtmlContainerTags>> {
+    section: T
     selectedGridIdx: { idx: number, orientation: Orientation }
     sectionRefObj: RefMap
     bp: number
@@ -20,7 +20,7 @@ interface GridDragLinesProps {
 
 const SNAP_DELTA = 10
 
-export default function GridDragLines(props: GridDragLinesProps) {
+export default function GridDragLines<T extends WapContainerEl<HtmlContainerTags>>(props: GridDragLinesProps<T>) {
     const { section, sectionRefObj, bp, selectedGridIdx, dragMode, viewMode, onSetDragMode, editedGrid, onSetDraggedGridIdx, onSetMouseDragStartPos } = props
     const gridTemplateCols = useMemo(() => {
         return dragMode?.includes('cols') && editedGrid

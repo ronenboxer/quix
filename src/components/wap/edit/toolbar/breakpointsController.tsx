@@ -7,6 +7,8 @@ import { blue, grey } from "@mui/material/colors"
 import BreakpointsMenu from "./breakpoint/breakpointsMenu"
 import ScreenWidthController from "./breakpoint/screenWidthController"
 import { useEffect, useState } from "react"
+import { capitalize } from "@/services/util.service"
+import VerticalDivider from "@/components/shared/verticalDivider"
 
 interface BreakpointControllerProps {
     breakpoints: PageBreakpoint[]
@@ -112,7 +114,7 @@ export default function BreakpointsController(props: BreakpointControllerProps) 
                         width: '40px',
                         minWidth: '40px'
                     }}
-                    label={useSvg('header_' + bp.screenType as SVG)} />
+                    label={useSvg('header' + capitalize(bp.screenType) as SVG)} />
             </Tooltip>
         )
 
@@ -124,7 +126,7 @@ export default function BreakpointsController(props: BreakpointControllerProps) 
 
     return (
         <>
-            <Box className="breakpoints-tools ms-auto flex items-center w-fit">
+            <Box className="breakpoints-tools flex items-center w-fit">
                 {breakpoints.length && bpIdx < breakpoints.length && <Tabs
                     className="breakpoints-tabs"
                     value={bpIdx}
@@ -158,6 +160,9 @@ export default function BreakpointsController(props: BreakpointControllerProps) 
                     onSetCurrScreenWidth={setCurrScreenWidthHandler}
                 />
             </Box>
+            <VerticalDivider height={50} colorClassName="white-200" styles={{
+                marginInline: '8px'
+            }}/>
         </>
     )
 }

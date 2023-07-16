@@ -3,6 +3,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import DropdownMenu from "@/components/ui/dropdownMenu"
 import { Box, Divider, ListItemText, MenuItem, Theme } from "@mui/material"
 import { Fragment, useState } from "react"
+import VerticalDivider from "@/components/shared/verticalDivider"
 
 interface PageListProps {
     pages: Partial<{ [T in PageType]: WapPage<T>[] }>
@@ -77,6 +78,9 @@ export default function wPageListMenu(props: PageListProps) {
             >
                 {getPageList()}
             </DropdownMenu>
+            <VerticalDivider height={50} colorClassName="white-200" styles={{
+                marginInline: '8px'
+            }}/>
         </Box>)
     )
 

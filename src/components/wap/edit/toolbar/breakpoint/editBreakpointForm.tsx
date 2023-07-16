@@ -1,5 +1,6 @@
 import { SVG, useSvg } from "@/components/shared/useSvg"
 import { OperationStatus, ScreenType, WapPage } from "@/model/wap"
+import { capitalize } from "@/services/util.service"
 import { Box, Button, Icon, IconButton, InputAdornment, OutlinedInput, Tooltip, Typography } from "@mui/material"
 import { blue, grey } from "@mui/material/colors"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
@@ -106,7 +107,7 @@ export default function EditBreakpointForm(props: EditBreakpointFormProps) {
             ref={containerRef}
         >
             <Icon className="mx-8">
-                {useSvg('header_' + breakpoint.screenType as SVG)}
+                {useSvg('header' + capitalize(breakpoint.screenType) as SVG)}
             </Icon>
             <Typography className="fs-080-rem">
                 {`${isEditable ? `${breakpoint.start + 1} - ` : breakpoint.text} `}

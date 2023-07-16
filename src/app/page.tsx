@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <div> 
-        <Link href={'wap/id/edit'}>See the Editor</Link>
+        <Link href="wap/id/edit">See the Editor</Link>
       </div>
     </>
   )

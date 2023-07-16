@@ -1,5 +1,5 @@
 import { DOMGridLayout, Orientation, PageRefMap, RefMap } from "@/model/DOM"
-import { SizeMap, GridCellSize, HtmlTags, OperationStatus, PageType, SectionType, SizeUnit, Wap, WapContainerEl, WapElement, WapPage, WapSection } from "@/model/wap"
+import { GridSizeMap, GridCellSize, HtmlTags, OperationStatus, PageType, SectionType, GridSizeUnit, Wap, WapContainerEl, WapElement, WapPage, WapSection, ElSizeUnit, HtmlContainerTags } from "@/model/wap"
 import { WapGridCellSize } from "@/model/wap/misc"
 import { blue, lightGreen } from "@mui/material/colors"
 import { CSSProperties } from "react"
@@ -21,7 +21,7 @@ export function getRandomInt(max: number, min = 0, isInclusive = false) {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + (isInclusive ? 1 : 0)) + Math.ceil(min))
 }
 
-export function Capitalize(str: string) {
+export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
@@ -71,13 +71,26 @@ export function getFormattedSegments(totalSpace: number, segments: WapGridCellSi
   }
 }
 
-export function extractValueAndUnit(sizeString: string, fixAmount: number = -1): { size: number, unit: SizeUnit } {
+export function extractGridValueAndUnit(sizeString: string, fixAmount: number = -1): { size: number, unit: GridSizeUnit } {
   let size = +[...sizeString.match(/[+-]?([0-9]*[.])?[0-9]+/) || []][0]
   if (isNaN(size)) return { size: 0, unit: 'px' }
   size = fixAmount !== -1
     ? formatNumber(size, fixAmount)
     : formatNumber(size)
-  const unit = ([...sizeString.match(/(v[hw])|(px)|(fr)|(%)/) || []][0] || 'px') as SizeUnit
+  const unit = ([...sizeString.match(/(v[hw])|(px)|(fr)|(%)/) || []][0] || 'px') as GridSizeUnit
+  return { size, unit }
+}
+export function extractContainerValueAndUnit(sizeString: string, fixAmount: number = -1): { size: number | '', unit: ElSizeUnit } {
+  let size = +[...sizeString.match(/[+-]?([0-9]*[.])?[0-9]+/) || []][0]
+  if (isNaN(size)) {
+    if (['max-content', 'min-content', 'fit-content'].includes(sizeString.trim())) return { size: '', unit: sizeString.trim().replace(/\-c\S/, '-c') as ElSizeUnit }
+    if (['auto', 'none'].includes(sizeString.trim())) return { size: 0, unit: sizeString.trim() as ElSizeUnit }
+    return { size: '', unit: 'auto' }
+  }
+  size = fixAmount !== -1
+    ? formatNumber(size, fixAmount)
+    : formatNumber(size)
+  const unit = ([...sizeString.match(/(v[hw])|(px)|(max-c)|(fit-c)|(min-c)|(%)|(auto)|(none)/) || []][0] || 'px') as ElSizeUnit
   return { size, unit }
 }
 
@@ -162,21 +175,21 @@ export function getAbsoluteRectStyle(props: {
 }
 
 export function getAbsoluteSize(totalSize: number, segments: string[], absoluteSegments?: number[]) {
-  const totalUnits: { [K in SizeUnit]: number } = {
+  const totalUnits: { [K in GridSizeUnit]: number } = {
     fr: 0,
     '%': 0,
     px: 0,
     vh: 0,
     vw: 0
   }
-  const absoluteSizes: { size: number, unit: SizeUnit }[] = []
+  const absoluteSizes: { size: number, unit: GridSizeUnit }[] = []
   segments.forEach((seg, idx) => {
     const formattedSeg = seg.trim()
     if (formattedSeg.includes('minmax') && absoluteSegments) {
       totalUnits.px += absoluteSegments[idx]
       absoluteSizes.push({ size: absoluteSegments[idx], unit: 'px' })
     } else {
-      const { size, unit } = extractValueAndUnit(formattedSeg)
+      const { size, unit } = extractGridValueAndUnit(formattedSeg)
       totalUnits[unit] += size
       absoluteSizes.push({ size, unit })
     }
@@ -194,7 +207,7 @@ export function getAbsoluteSize(totalSize: number, segments: string[], absoluteS
     ) / totalUnits.fr)
     : 0
 
-  const sizeMap: { [K in SizeUnit]: number } = {
+  const sizeMap: { [K in GridSizeUnit]: number } = {
     fr: frSize,
     '%': percentSize,
     px: 1,
@@ -356,12 +369,12 @@ export function getFormattedRect(props: {
 export function getGridHeaders(props:
   {
     bp: number,
-    container: WapContainerEl,
+    container: WapContainerEl<HtmlContainerTags>,
     croppedGrid: DOMGridLayout,
     croppedGridComparison: DOMGridLayout,
     orientation: Orientation,
     absoluteSizes: number[],
-    sizeMap: SizeMap
+    sizeMap: GridSizeMap
   }) {
   const { bp, container, sizeMap, croppedGrid, croppedGridComparison, orientation } = props
   const containerGridValues = orientation === 'cols'
@@ -393,7 +406,7 @@ export function getGridHeaders(props:
   return template
 }
 
-export function getAbsoluteGridSizes(sizes: GridCellSize[], sizeMap: SizeMap) {
+export function getAbsoluteGridSizes(sizes: GridCellSize[], sizeMap: GridSizeMap) {
   return sizes.map(size => {
     if (size.minmax) {
       return size.minmax.min.value * sizeMap[size.minmax.min.unit]
@@ -406,9 +419,9 @@ export function getAbsoluteGridSizes(sizes: GridCellSize[], sizeMap: SizeMap) {
 export function getElementRefById(pageRefMap: PageRefMap, id: string) {
   for (let sectionId in pageRefMap.sections) {
     const currMap = pageRefMap.sections[id]
-    if (sectionId === id) return {map: currMap, breadcrumbs: [sectionId]}
-    const ref = getElementRefDeepSearch(currMap, id,[])
-    if (ref) return {...ref, breadcrumbs: [sectionId, ...ref.breadcrumbs]}
+    if (sectionId === id) return { map: currMap, breadcrumbs: [sectionId] }
+    const ref = getElementRefDeepSearch(currMap, id, [])
+    if (ref) return { ...ref, breadcrumbs: [sectionId, ...ref.breadcrumbs] }
   }
   return null
 }
@@ -422,7 +435,7 @@ function getElementRefDeepSearch(map: RefMap, id: string, breadCrumbs: string[])
       breadcrumbs: [elId]
     }
     const ref = getElementRefDeepSearch(map.children[elId], id, breadCrumbs)
-    if (ref) return {...ref, breadcrumbs:[elId,...ref.breadcrumbs]}
+    if (ref) return { ...ref, breadcrumbs: [elId, ...ref.breadcrumbs] }
   }
   return null
 }
@@ -439,7 +452,7 @@ export function getElUnderMouse(wap: Wap, page: WapPage<PageType>, pageRefMap: P
   return null
 }
 
-function getElUnderMouseDeepSearch(currEl: WapElement<HtmlTags> | WapContainerEl, pageRefMap: PageRefMap, { x, y }: { x: number, y: number }): WapElement<HtmlTags> | WapContainerEl | null {
+function getElUnderMouseDeepSearch<T extends WapElement<HtmlTags>>( currEl:T, pageRefMap: PageRefMap, { x, y }: { x: number, y: number }): WapElement<HtmlTags>|null {
   const currRefObj = getElementRefById(pageRefMap, currEl.id)?.map || null
   if (!currRefObj || !isMouseOverRef(currRefObj.ref!, { x, y })) return null
   if (currEl instanceof WapContainerEl && currEl.layers.length) {

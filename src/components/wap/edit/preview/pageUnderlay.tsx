@@ -1,5 +1,6 @@
 import { SVG, useSvg } from "@/components/shared/useSvg"
 import { PageBreakpoint } from "@/model/wap"
+import { capitalize } from "@/services/util.service"
 import { Box, Icon, Typography } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
 
@@ -27,7 +28,7 @@ export default function PageUnderlay(props: PageUnderlayProps) {
 
     return (
         <Box
-            className="page-preview-underlay absolute grid fg-1 z-1 pa-0 mb-0 grey-200 background"
+            className="page-preview-underlay absolute grid fg-1 z-1 pa-0 mb-0 grey-200-background"
             sx={{
                 width: currBreakpoint.end
                     ? currBreakpoint.end + 'px'
@@ -39,7 +40,7 @@ export default function PageUnderlay(props: PageUnderlayProps) {
         >
 
             <div className="width-indicator absolute flex center fill black-200 rotate-75" ref={indicatorRef}>
-                <Icon className="scale-75">{useSvg('header_' + currBreakpoint.screenType as SVG)}</Icon>
+                <Icon className="scale-75">{useSvg('header' + capitalize(currBreakpoint.screenType) as SVG)}</Icon>
                 <Typography className="fw-400 capitalize black-200 mx-4">
                     {currBreakpoint.screenType}
                 </Typography>

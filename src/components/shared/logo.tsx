@@ -10,7 +10,7 @@ export default function AppLogo(props: AppLogoProps) {
 
     function navigationHandler(){
         // if (shouldNavigateToHome) router.replace('/')
-        router.replace('/')
+        // router.push('/')
     }
     return (
         <span className="app-logo exo" onClick={navigationHandler}>

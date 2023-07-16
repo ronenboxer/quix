@@ -41,7 +41,7 @@ export default function NotificationMenu(props: NotificationMenuProps) {
             letterSpacing:'auto'
         }}>Settings</Button>
     </Box>
-    const button = useSvg('header_notification')
+    const button = useSvg('headerNotification')
 
     function getNotificationList() {
         return <div>

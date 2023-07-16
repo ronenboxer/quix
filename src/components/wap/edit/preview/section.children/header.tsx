@@ -24,7 +24,7 @@ export default function SectionHeader(props: HeaderProps) {
         >
             {section.isGlobal && <Icon
                 className="global-icon scale-70">
-                {useSvg('header_globals')}
+                {useSvg('headerGlobals')}
             </Icon>}
             {section.type}
         </Typography>
